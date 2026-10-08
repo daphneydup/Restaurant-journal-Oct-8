@@ -1,7 +1,17 @@
-import { visitInputSchema, visitSchema, type Visit } from '@/types'
+import {
+  logVisitInputSchema,
+  visitInputSchema,
+  visitSchema,
+  type Dish,
+  type GoBackEntry,
+  type Restaurant,
+  type Visit,
+} from '@/types'
+import { RepositoryError } from '../errors'
 import type { VisitRepository } from '../repositories'
 import {
   assertLensesExist,
+  assertNoDuplicateRestaurant,
   assertRestaurantExists,
   clone,
   newestFirst,
@@ -35,6 +45,81 @@ export function createMockVisitRepository(store: MockStore): VisitRepository {
             .sort(newest),
         ),
       ),
+
+    logVisit: (input) =>
+      store.run(() => {
+        const data = parseOrThrow(logVisitInputSchema, input)
+        const db = store.read()
+        const now = store.now().toISOString()
+
+        // Resolve (or build) the restaurant first; nothing is written until everything checks out.
+        let restaurant: Restaurant
+        let createdRestaurant = false
+        if (data.restaurant.mode === 'existing') {
+          const { restaurantId } = data.restaurant
+          const existing = db.restaurants.find((r) => r.id === restaurantId)
+          if (!existing) {
+            throw new RepositoryError(
+              'invalid_reference',
+              `Restaurant "${restaurantId}" does not exist.`,
+            )
+          }
+          restaurant = existing
+        } else {
+          const { name, neighborhood, city, cuisine } = data.restaurant
+          assertNoDuplicateRestaurant(db, { name, neighborhood })
+          restaurant = {
+            id: store.newId(),
+            name,
+            neighborhood,
+            city,
+            priceTier: data.visit.priceTier,
+            createdAt: now,
+            ...(cuisine !== undefined && { cuisine }),
+          }
+          createdRestaurant = true
+        }
+
+        assertLensesExist(
+          db,
+          data.visit.ratings.map((r) => r.lensId),
+        )
+        for (const dish of data.dishes) assertLensesExist(db, dish.lensIds)
+
+        const visit: Visit = {
+          id: store.newId(),
+          restaurantId: restaurant.id,
+          ...data.visit,
+          createdAt: now,
+        }
+        const dishes: Dish[] = data.dishes.map((dish) => ({
+          id: store.newId(),
+          restaurantId: restaurant.id,
+          visitId: visit.id,
+          ...dish,
+          createdAt: now,
+        }))
+        const alreadyFlagged = db.goBackEntries.some((g) => g.restaurantId === restaurant.id)
+        const goBackEntry: GoBackEntry | null =
+          data.addToGoBack && !alreadyFlagged
+            ? { id: store.newId(), restaurantId: restaurant.id, addedAt: now }
+            : null
+
+        // One commit = all or nothing.
+        store.commit((current) => ({
+          ...current,
+          restaurants: createdRestaurant
+            ? [...current.restaurants, restaurant]
+            : current.restaurants,
+          visits: [...current.visits, visit],
+          dishes: [...current.dishes, ...dishes],
+          goBackEntries: goBackEntry
+            ? [...current.goBackEntries, goBackEntry]
+            : current.goBackEntries,
+        }))
+
+        return clone({ restaurant, visit, dishes, createdRestaurant })
+      }),
 
     getById: (id) => store.run(() => clone(store.read().visits.find((v) => v.id === id) ?? null)),
 

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRepositories } from '@/data/repositoryContext'
-import type { VisitInput, VisitPatch } from '@/types'
+import type { LogVisitInput, VisitInput, VisitPatch } from '@/types'
 import { queryKeys } from './queryKeys'
 
 export function useVisits() {
@@ -45,6 +45,25 @@ export function useDeleteVisit() {
       Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.visits.all }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dishes.all }),
+      ]),
+  })
+}
+
+/**
+ * Saves a whole Log a Visit submission (restaurant if new, visit, dishes, go-back) in one
+ * atomic call, then refreshes everything it may have touched.
+ */
+export function useLogVisit() {
+  const { visits } = useRepositories()
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (input: LogVisitInput) => visits.logVisit(input),
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.restaurants.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.visits.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dishes.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.goBack.all }),
       ]),
   })
 }

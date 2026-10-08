@@ -43,3 +43,23 @@ export function notFound(entity: string, id: string): never {
 export function newestFirst<T>(pick: (item: T) => string) {
   return (a: T, b: T) => pick(b).localeCompare(pick(a))
 }
+
+/** Throws `conflict` if another restaurant has the same name and neighborhood (case-insensitive). */
+export function assertNoDuplicateRestaurant(
+  db: MockDb,
+  candidate: { name: string; neighborhood: string },
+  ignoreId?: string,
+) {
+  const clash = db.restaurants.find(
+    (r) =>
+      r.id !== ignoreId &&
+      r.name.toLowerCase() === candidate.name.toLowerCase() &&
+      r.neighborhood.toLowerCase() === candidate.neighborhood.toLowerCase(),
+  )
+  if (clash) {
+    throw new RepositoryError(
+      'conflict',
+      `"${clash.name}" in ${clash.neighborhood} is already saved.`,
+    )
+  }
+}

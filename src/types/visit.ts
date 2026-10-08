@@ -7,8 +7,7 @@ export const WORKED_FOR_EVERYONE = ['yes', 'maybe', 'no'] as const
 export const workedForEveryoneSchema = z.enum(WORKED_FOR_EVERYONE)
 export type WorkedForEveryone = z.infer<typeof workedForEveryoneSchema>
 
-const visitFields = {
-  restaurantId: idSchema,
+const visitDetailFields = {
   date: isoDateSchema,
   /**
    * One rating per dietary lens. The lenses present here ARE the diets at the table,
@@ -26,6 +25,8 @@ const visitFields = {
   photoUrls: z.array(z.string().min(1)).max(4),
 }
 
+const visitFields = { restaurantId: idSchema, ...visitDetailFields }
+
 const ratingsHaveUniqueLenses = (visit: { ratings: { lensId: string }[] }) =>
   new Set(visit.ratings.map((r) => r.lensId)).size === visit.ratings.length
 
@@ -35,6 +36,12 @@ const uniqueLensesIssue = {
 }
 
 // .omit()/.pick() throw on refined schemas, so both shapes are built from the same fields.
+/** A visit without its restaurant, for flows that create the restaurant in the same step. */
+export const visitDetailsSchema = z
+  .object(visitDetailFields)
+  .refine(ratingsHaveUniqueLenses, uniqueLensesIssue)
+export type VisitDetails = z.infer<typeof visitDetailsSchema>
+
 export const visitInputSchema = z
   .object(visitFields)
   .refine(ratingsHaveUniqueLenses, uniqueLensesIssue)

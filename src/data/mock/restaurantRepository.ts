@@ -1,29 +1,11 @@
-import { RepositoryError } from '../errors'
 import type { RestaurantRepository } from '../repositories'
 import { restaurantInputSchema, restaurantSchema, type Restaurant } from '@/types'
-import { clone, notFound, parseOrThrow } from './helpers'
+import { assertNoDuplicateRestaurant, clone, notFound, parseOrThrow } from './helpers'
 import type { MockStore } from './store'
 
-const sameSpot = (
-  a: Restaurant | { name: string; neighborhood: string },
-  b: { name: string; neighborhood: string },
-) =>
-  a.name.toLowerCase() === b.name.toLowerCase() &&
-  a.neighborhood.toLowerCase() === b.neighborhood.toLowerCase()
-
 export function createMockRestaurantRepository(store: MockStore): RestaurantRepository {
-  const assertUnique = (
-    candidate: Restaurant | { name: string; neighborhood: string },
-    ignoreId?: string,
-  ) => {
-    const clash = store.read().restaurants.find((r) => r.id !== ignoreId && sameSpot(r, candidate))
-    if (clash) {
-      throw new RepositoryError(
-        'conflict',
-        `"${clash.name}" in ${clash.neighborhood} is already saved.`,
-      )
-    }
-  }
+  const assertUnique = (candidate: { name: string; neighborhood: string }, ignoreId?: string) =>
+    assertNoDuplicateRestaurant(store.read(), candidate, ignoreId)
 
   return {
     list: () =>
