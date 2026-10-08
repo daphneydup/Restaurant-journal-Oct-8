@@ -15,7 +15,7 @@ afterEach(() => vi.useRealTimers())
 
 async function openPlan(path = '/plan') {
   const user = newUser()
-  const utils = renderApp(path, { repositories: repos })
+  const utils = await renderApp(path, { repositories: repos })
   await screen.findByRole('heading', {
     level: 2,
     name: /Your shortlist|Log a few visits first|Pick who’s coming/,
@@ -33,7 +33,7 @@ const rankedNames = () => {
 
 describe('Plan a Night Out', () => {
   it('shows a loading state, then starts from the profile’s diets (vegan + steak)', async () => {
-    renderApp('/plan', { repositories: repos })
+    await renderApp('/plan', { repositories: createTestRepositories({ latencyMs: 150 }) })
     expect(screen.getByText('Loading your spots')).toBeInTheDocument()
 
     await screen.findByRole('heading', { level: 2, name: 'Your shortlist' })
@@ -70,7 +70,7 @@ describe('Plan a Night Out', () => {
   it('links each result to the spot', async () => {
     const { user, router } = await openPlan()
     await user.click(screen.getByRole('link', { name: /Smokestack Sprout/ }))
-    expect(router.state.location.pathname).toBe('/spots/r-sprout')
+    await waitFor(() => expect(router.state.location.pathname).toBe('/spots/r-sprout'))
   })
 
   it('narrows the shortlist when the budget changes, and keeps it in the URL', async () => {
@@ -142,7 +142,7 @@ describe('Plan a Night Out', () => {
   it('shows an error with retry, then recovers', async () => {
     repos.dev?.setSimulateErrors(true)
     const user = newUser()
-    renderApp('/plan', { repositories: repos })
+    await renderApp('/plan', { repositories: repos })
     expect(await screen.findByRole('alert')).toHaveTextContent('We couldn’t load your spots')
 
     repos.dev?.setSimulateErrors(false)

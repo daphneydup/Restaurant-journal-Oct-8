@@ -20,7 +20,7 @@ const names = () =>
 
 describe('Go-Back list', () => {
   it('shows a loading state, then the spots you want to revisit, longest wait first', async () => {
-    renderApp('/go-back', { repositories: repos })
+    await renderApp('/go-back', { repositories: createTestRepositories({ latencyMs: 150 }) })
     expect(screen.getByText('Loading your Go-Back list')).toBeInTheDocument()
 
     await screen.findByRole('heading', { level: 2, name: 'The Copper Table' })
@@ -34,7 +34,7 @@ describe('Go-Back list', () => {
   })
 
   it('uses gentle wording for how long it has been', async () => {
-    renderApp('/go-back', { repositories: repos })
+    await renderApp('/go-back', { repositories: repos })
     const card = async (name: string) =>
       (await screen.findByRole('heading', { level: 2, name })).closest('li')!
 
@@ -48,7 +48,7 @@ describe('Go-Back list', () => {
   })
 
   it('shows the note you left and how each diet fared', async () => {
-    renderApp('/go-back', { repositories: repos })
+    await renderApp('/go-back', { repositories: repos })
     const copper = (
       await screen.findByRole('heading', { level: 2, name: 'The Copper Table' })
     ).closest('li')!
@@ -58,7 +58,7 @@ describe('Go-Back list', () => {
   })
 
   it('offers to log a visit, prefilled for that spot', async () => {
-    renderApp('/go-back', { repositories: repos })
+    await renderApp('/go-back', { repositories: repos })
     const copper = (
       await screen.findByRole('heading', { level: 2, name: 'The Copper Table' })
     ).closest('li')!
@@ -70,7 +70,7 @@ describe('Go-Back list', () => {
 
   it('removes a spot from the list without deleting the spot', async () => {
     const user = newUser()
-    renderApp('/go-back', { repositories: repos })
+    await renderApp('/go-back', { repositories: repos })
     await screen.findByRole('heading', { level: 2, name: 'The Copper Table' })
 
     await user.click(
@@ -98,7 +98,7 @@ describe('Go-Back list', () => {
       dishes: [],
       addToGoBack: false,
     })
-    renderApp('/go-back', { repositories: repos })
+    await renderApp('/go-back', { repositories: repos })
     await screen.findByRole('heading', { level: 2, name: 'Saffron & Salt' })
     expect(names()[0]).toBe('Saffron & Salt')
     const copper = screen
@@ -109,7 +109,7 @@ describe('Go-Back list', () => {
 
   it('invites you to flag spots when the list is empty', async () => {
     for (const entry of await repos.goBack.list()) await repos.goBack.remove(entry.id)
-    renderApp('/go-back', { repositories: repos })
+    await renderApp('/go-back', { repositories: repos })
     expect(
       await screen.findByRole('heading', { name: 'Nothing to revisit yet' }),
     ).toBeInTheDocument()
@@ -119,7 +119,7 @@ describe('Go-Back list', () => {
   it('shows an error with retry, then recovers', async () => {
     repos.dev?.setSimulateErrors(true)
     const user = newUser()
-    renderApp('/go-back', { repositories: repos })
+    await renderApp('/go-back', { repositories: repos })
     expect(await screen.findByRole('alert')).toHaveTextContent('We couldn’t load your Go-Back list')
 
     repos.dev?.setSimulateErrors(false)
@@ -131,7 +131,7 @@ describe('Go-Back list', () => {
 
   it('tells you when removing fails and keeps the spot', async () => {
     const user = newUser()
-    renderApp('/go-back', { repositories: repos })
+    await renderApp('/go-back', { repositories: repos })
     await screen.findByRole('heading', { level: 2, name: 'The Copper Table' })
     repos.dev?.setSimulateErrors(true)
     await user.click(

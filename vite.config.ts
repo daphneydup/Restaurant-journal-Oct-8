@@ -13,6 +13,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
-    css: false,
+    // CSS is skipped for speed, except the design tokens, which a test reads to check contrast.
+    css: { include: /tokens\.css/ },
   },
 })

@@ -15,7 +15,7 @@ afterEach(() => vi.useRealTimers())
 
 async function openSpot(id: string, heading: string) {
   const user = newUser()
-  const utils = renderApp(`/spots/${id}`, { repositories: repos })
+  const utils = await renderApp(`/spots/${id}`, { repositories: repos })
   await screen.findByRole('heading', { level: 1, name: heading })
   return { user, ...utils }
 }
@@ -25,7 +25,7 @@ const section = (title: string | RegExp) =>
 
 describe('Restaurant detail: overview', () => {
   it('shows a loading state, then the restaurant', async () => {
-    renderApp('/spots/r-ember', { repositories: repos })
+    await renderApp('/spots/r-ember', { repositories: createTestRepositories({ latencyMs: 150 }) })
     expect(screen.getByText('Loading restaurant')).toBeInTheDocument()
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Ember & Orchard' }),
@@ -227,7 +227,7 @@ describe('Restaurant detail: removing a spot', () => {
 
 describe('Restaurant detail: other states', () => {
   it('shows a friendly page for an unknown restaurant', async () => {
-    renderApp('/spots/ghost', { repositories: repos })
+    await renderApp('/spots/ghost', { repositories: repos })
     expect(
       await screen.findByRole('heading', { name: 'We couldn’t find that restaurant' }),
     ).toBeInTheDocument()
@@ -237,7 +237,7 @@ describe('Restaurant detail: other states', () => {
   it('shows an error with retry, then recovers', async () => {
     repos.dev?.setSimulateErrors(true)
     const user = newUser()
-    renderApp('/spots/r-ember', { repositories: repos })
+    await renderApp('/spots/r-ember', { repositories: repos })
 
     expect(await screen.findByRole('alert')).toHaveTextContent('We couldn’t load this spot')
     repos.dev?.setSimulateErrors(false)

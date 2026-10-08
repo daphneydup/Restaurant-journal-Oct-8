@@ -21,7 +21,7 @@ const cardNames = () => cards().map((li) => within(li).getByRole('heading').text
 
 async function openSpots(path = '/') {
   const user = newUser()
-  const utils = renderApp(path, { repositories: repos })
+  const utils = await renderApp(path, { repositories: repos })
   // Ready once the data has loaded (the Filters button is disabled until then).
   await waitFor(() => expect(screen.getByRole('button', { name: /^Filters/ })).toBeEnabled())
   return { user, ...utils }
@@ -29,7 +29,7 @@ async function openSpots(path = '/') {
 
 describe('My Spots: list', () => {
   it('shows a loading state, then every spot, most recently visited first', async () => {
-    renderApp('/', { repositories: repos })
+    await renderApp('/', { repositories: createTestRepositories({ latencyMs: 150 }) })
     expect(screen.getByText('Loading your spots')).toBeInTheDocument()
 
     await screen.findByRole('heading', { name: 'Ember & Orchard' })
@@ -72,7 +72,7 @@ describe('My Spots: list', () => {
   it('makes each card a link to its detail page', async () => {
     const { user, router } = await openSpots()
     await user.click(screen.getByRole('link', { name: 'Little Fig Kitchen' }))
-    expect(router.state.location.pathname).toBe('/spots/r-fig')
+    await waitFor(() => expect(router.state.location.pathname).toBe('/spots/r-fig'))
   })
 })
 
@@ -185,7 +185,7 @@ describe('My Spots: filters', () => {
 describe('My Spots: empty and error states', () => {
   it('invites you to log a first visit when there are no spots', async () => {
     for (const r of await repos.restaurants.list()) await repos.restaurants.remove(r.id)
-    renderApp('/', { repositories: repos })
+    await renderApp('/', { repositories: repos })
 
     expect(await screen.findByRole('heading', { name: 'No spots yet' })).toBeInTheDocument()
     // One in the page header, one as the empty state's call to action.
@@ -197,7 +197,7 @@ describe('My Spots: empty and error states', () => {
   it('shows an error with retry when loading fails, then recovers', async () => {
     repos.dev?.setSimulateErrors(true)
     const user = newUser()
-    renderApp('/', { repositories: repos })
+    await renderApp('/', { repositories: repos })
 
     expect(await screen.findByRole('alert')).toHaveTextContent('We couldn’t load your spots')
     repos.dev?.setSimulateErrors(false)

@@ -20,7 +20,7 @@ afterEach(() => {
 
 async function openForm(path = '/log') {
   const user = userEvent.setup()
-  renderApp(path, { repositories: repos })
+  await renderApp(path, { repositories: repos })
   await screen.findByRole('heading', { name: 'Where & when' })
   return user
 }
@@ -45,7 +45,7 @@ const save = (user: ReturnType<typeof userEvent.setup>) =>
 
 describe('Log a Visit page: loading the form', () => {
   it('shows a loading state, then the form with the profile’s diets preselected and today’s date', async () => {
-    renderApp('/log', { repositories: repos })
+    await renderApp('/log', { repositories: createTestRepositories({ latencyMs: 150 }) })
     expect(screen.getByText('Loading the form')).toBeInTheDocument()
 
     await screen.findByRole('heading', { name: 'Where & when' })
@@ -70,7 +70,7 @@ describe('Log a Visit page: loading the form', () => {
   it('shows an error state with retry when the data fails to load', async () => {
     repos.dev?.setSimulateErrors(true)
     const user = userEvent.setup()
-    renderApp('/log', { repositories: repos })
+    await renderApp('/log', { repositories: repos })
 
     expect(await screen.findByRole('alert')).toHaveTextContent('We couldn’t load the form')
 
@@ -392,7 +392,7 @@ describe('Log a Visit page: saving', () => {
     repos = slow
     vi.useRealTimers() // real timers for the artificial latency
     const user = userEvent.setup()
-    renderApp('/log', { repositories: slow })
+    await renderApp('/log', { repositories: slow })
     await screen.findByRole('heading', { name: 'Where & when' })
 
     await pickRestaurant(user, 'noodle', /Noodle & Nori/)
