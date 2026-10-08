@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { fitWithin } from './image'
-import { formatPriceTier, PRICE_TIER_LABELS, RATING_WORDS } from './format'
+import {
+  formatPriceTier,
+  formatVisitDate,
+  joinList,
+  PRICE_TIER_LABELS,
+  RATING_WORDS,
+} from './format'
 
 describe('formatPriceTier', () => {
   it('renders one dollar sign per tier', () => {
@@ -26,5 +32,22 @@ describe('fitWithin', () => {
 
   it('never scales an image up', () => {
     expect(fitWithin(400, 300, 800)).toEqual({ width: 400, height: 300 })
+  })
+})
+
+describe('joinList', () => {
+  it.each([
+    [[], ''],
+    [['Vegan'], 'Vegan'],
+    [['Vegan', 'Steak'], 'Vegan and Steak'],
+    [['Vegan', 'Steak', 'Gluten-free'], 'Vegan, Steak and Gluten-free'],
+  ])('%j -> %j', (items, expected) => {
+    expect(joinList(items)).toBe(expected)
+  })
+})
+
+describe('formatVisitDate', () => {
+  it('formats a visit date for people', () => {
+    expect(formatVisitDate('2026-10-05')).toBe('Mon, Oct 5, 2026')
   })
 })

@@ -32,3 +32,9 @@ const visitDateFormat = new Intl.DateTimeFormat('en-US', {
 export function formatVisitDate(isoDate: string): string {
   return visitDateFormat.format(parseISODate(isoDate))
 }
+
+/** ["Vegan"] -> "Vegan"; two -> "Vegan and Steak"; three -> "Vegan, Steak and Gluten-free". */
+export function joinList(items: readonly string[]): string {
+  if (items.length <= 1) return items[0] ?? ''
+  return `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`
+}
