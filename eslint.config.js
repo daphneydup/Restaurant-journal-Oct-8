@@ -31,7 +31,7 @@ export default tseslint.config(
   // Only src/data/index.ts (the single DI point) and tests may import data/mock.
   {
     files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/data/index.ts', 'src/data/mock/**', '**/*.test.{ts,tsx}'],
+    ignores: ['src/data/index.ts', 'src/data/mock/**', 'src/test/**', '**/*.test.{ts,tsx}'],
     rules: {
       'no-restricted-imports': [
         'error',

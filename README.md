@@ -55,6 +55,39 @@ src/
 - **Accessibility:** semantic landmarks, a skip link, visible focus rings, 44px touch targets,
   AA-checked colour pairs, and `prefers-reduced-motion` support are built in.
 
+### Data layer
+
+```
+components / features
+        │  call
+        ▼
+src/hooks/queries/*        TanStack Query hooks (useRestaurants, useCreateVisit, ...)
+        │  read repositories from React context
+        ▼
+src/data/repositoryContext.ts  ←  <RepositoryProvider> in src/app/providers.tsx
+        │  value comes from
+        ▼
+src/data/index.ts          createRepositories()   ← the ONE file that picks an implementation
+        │
+        ▼
+src/data/mock/*            in-memory data persisted to localStorage (swap for src/data/supabase/*)
+```
+
+- **Types** live in `src/types`: each domain has a Zod schema and a TypeScript type inferred
+  from it (`Restaurant`, `Visit`, `DietRating`, `Dish`, `GoBackEntry`, `DietLens`, `PriceTier`,
+  `User`). Field names are camelCase.
+- **Repositories** are interfaces in `src/data/repositories` (`list`, `getById`, `create`,
+  `update`, `remove`, plus a few extras such as `VisitRepository.listByRestaurant`). They only
+  throw `RepositoryError`, whose `code` (`not_found`, `validation`, `conflict`, ...) is what UI
+  code branches on.
+- **The mock** validates every write with the Zod schemas, enforces foreign keys and uniqueness,
+  cascades deletes like Postgres would, simulates latency (300 ms), and persists to
+  `localStorage` under `tfe:mock-db`. Bumping `MOCK_DB_VERSION` re-seeds everyone.
+- **Seed data** (`src/data/mock/seed/demo.ts`) is ten fictional Dallas restaurants with dates
+  relative to the first run. `repositories.dev.resetDemoData()` regenerates it.
+- **Diet lenses are data.** The UI maps over `useDietLenses()`; adding a lens means adding a
+  row, not editing a component.
+
 ## How to swap in Supabase
 
 _Filled in at the end of the build (stage f), once the repositories exist._
