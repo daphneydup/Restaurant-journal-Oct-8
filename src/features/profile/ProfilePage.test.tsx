@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Repositories } from '@/data'
 import { freezeToday, newUser } from '@/test/helpers'
 import { renderApp } from '@/test/renderWithRouter'
+import { createFakeSupabase } from '@/test/fakeSupabase'
 import { createTestRepositories } from '@/test/testRepositories'
 
 let repos: Repositories
@@ -195,5 +196,28 @@ describe('Profile: demo data tools', () => {
     await screen.findByRole('textbox', { name: 'Display name' })
     expect(screen.queryByRole('heading', { name: 'Demo data' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Reset demo data' })).not.toBeInTheDocument()
+  })
+})
+
+describe('Profile: where the data lives', () => {
+  it('says the data is demo data on this device when using the mock layer', async () => {
+    await openProfile()
+    expect(screen.getByRole('heading', { name: 'Demo data on this device' })).toBeInTheDocument()
+    expect(screen.getByText(/Add your Supabase key to \.env\.local/)).toBeInTheDocument()
+  })
+
+  it('says it is saved to Supabase (and hides the demo tools) when using Supabase', async () => {
+    const fake = createFakeSupabase()
+    fake.on('GET', /\/rest\/v1\/diet_lenses$/, { body: [] })
+    fake.on('GET', /\/rest\/v1\/profiles$/, {
+      body: [{ id: 'user-1', display_name: 'Friend', home_city: 'Dallas', default_lens_ids: [] }],
+    })
+    await renderApp('/profile', { repositories: fake.repositories() })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Saved to your Supabase project' }),
+    ).toBeInTheDocument()
+    expect(await screen.findByRole('textbox', { name: 'Display name' })).toHaveValue('Friend')
+    expect(screen.queryByRole('heading', { name: 'Demo data' })).not.toBeInTheDocument()
   })
 })
