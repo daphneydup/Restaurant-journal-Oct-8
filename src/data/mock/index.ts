@@ -17,6 +17,7 @@ export { MOCK_STORAGE_KEY } from './store'
 export function createMockRepositories(options: MockStoreOptions = {}): Repositories {
   const store = createMockStore(options)
   return {
+    kind: 'mock',
     restaurants: createMockRestaurantRepository(store),
     visits: createMockVisitRepository(store),
     dishes: createMockDishRepository(store),

@@ -1,4 +1,3 @@
-import type { z } from 'zod'
 import { RepositoryError } from '../errors'
 import type { MockDb } from './db'
 
@@ -7,19 +6,7 @@ export function clone<T>(value: T): T {
   return structuredClone(value)
 }
 
-/** Validates with a Zod schema and throws a RepositoryError('validation') on failure. */
-export function parseOrThrow<S extends z.ZodType>(schema: S, value: unknown): z.infer<S> {
-  const result = schema.safeParse(value)
-  if (!result.success) {
-    const message = result.error.issues
-      .map((issue) =>
-        issue.path.length ? `${issue.path.join('.')}: ${issue.message}` : issue.message,
-      )
-      .join('; ')
-    throw new RepositoryError('validation', message, { cause: result.error })
-  }
-  return result.data
-}
+export { parseOrThrow } from '../validation'
 
 export function assertRestaurantExists(db: MockDb, restaurantId: string) {
   if (!db.restaurants.some((r) => r.id === restaurantId)) {

@@ -5,8 +5,9 @@
  * (ESLint enforces it). Everything else reaches data through the query hooks, which read
  * the repositories from React context.
  *
- * To move to Supabase: implement `Repositories` in `src/data/supabase/` and change
- * `createRepositories` below. Nothing else in the app changes.
+ * Which implementation runs is decided by the environment:
+ *   - VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY both set -> your Supabase project
+ *   - otherwise                                             -> demo data kept in localStorage
  */
 import { createMockRepositories } from './mock'
 import type { Repositories } from './repositories'
@@ -15,6 +16,18 @@ export type { Repositories } from './repositories'
 export type { DevControls } from './repositories'
 export { RepositoryError, isRepositoryError, type RepositoryErrorCode } from './errors'
 
-export function createRepositories(): Repositories {
+export interface DataEnv {
+  VITE_SUPABASE_URL?: string | undefined
+  VITE_SUPABASE_ANON_KEY?: string | undefined
+}
+
+export async function createRepositories(env: DataEnv = import.meta.env): Promise<Repositories> {
+  const url = env.VITE_SUPABASE_URL?.trim()
+  const anonKey = env.VITE_SUPABASE_ANON_KEY?.trim()
+  if (url && anonKey) {
+    // Loaded on demand, so the Supabase client isn't downloaded when running on demo data.
+    const { createSupabaseRepositories } = await import('./supabase')
+    return createSupabaseRepositories({ url, anonKey })
+  }
   return createMockRepositories({ latencyMs: 300 })
 }

@@ -31,16 +31,34 @@ export default tseslint.config(
   // Only src/data/index.ts (the single DI point) and tests may import data/mock.
   {
     files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/data/index.ts', 'src/data/mock/**', 'src/test/**', '**/*.test.{ts,tsx}'],
+    ignores: [
+      'src/data/index.ts',
+      'src/data/mock/**',
+      'src/data/supabase/**',
+      'src/test/**',
+      '**/*.test.{ts,tsx}',
+    ],
     rules: {
       'no-restricted-imports': [
         'error',
         {
           patterns: [
             {
-              group: ['**/data/mock', '**/data/mock/*', '**/mock/*', './mock', './mock/*'],
+              group: [
+                '**/data/mock',
+                '**/data/mock/*',
+                '**/mock/*',
+                './mock',
+                './mock/*',
+                '**/data/supabase',
+                '**/data/supabase/*',
+                '**/supabase/*',
+                './supabase',
+                './supabase/*',
+                '@supabase/*',
+              ],
               message:
-                'Do not import the mock data layer directly. Use the query hooks; src/data/index.ts is the only DI point.',
+                'Do not import a data implementation (mock or Supabase) directly. Use the query hooks; src/data/index.ts is the only DI point.',
             },
           ],
         },

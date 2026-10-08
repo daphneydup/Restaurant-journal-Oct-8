@@ -24,6 +24,8 @@ export interface DevControls {
 
 /** Everything the app needs from "the back end". Provided once via RepositoryProvider. */
 export interface Repositories {
+  /** Where the data lives, so the UI can say so. */
+  kind: 'mock' | 'supabase'
   restaurants: RestaurantRepository
   visits: VisitRepository
   dishes: DishRepository
