@@ -1,5 +1,6 @@
 import { QueryClientProvider, type QueryClient } from '@tanstack/react-query'
 import { useState, type ReactNode } from 'react'
+import { ToastProvider } from '@/components'
 import { createRepositories } from '@/data'
 import type { Repositories } from '@/data'
 import { RepositoryProvider } from '@/data/RepositoryProvider'
@@ -22,7 +23,9 @@ export function AppProviders({
   const [client] = useState(() => queryClient ?? createQueryClient())
   return (
     <RepositoryProvider repositories={repos}>
-      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+      <QueryClientProvider client={client}>
+        <ToastProvider>{children}</ToastProvider>
+      </QueryClientProvider>
     </RepositoryProvider>
   )
 }

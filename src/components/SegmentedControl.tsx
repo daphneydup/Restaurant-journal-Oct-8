@@ -1,7 +1,13 @@
 import { useId } from 'react'
 import { cn } from '@/lib/cn'
+import { VisuallyHidden } from './VisuallyHidden'
 
-export type SegmentedOption<T extends string> = { value: T; label: string }
+export type SegmentedOption<T extends string> = {
+  value: T
+  label: string
+  /** Extra screen-reader-only text, e.g. "$$" -> "moderate". */
+  hint?: string
+}
 
 /** Single-choice control built on native radios (arrow keys and grouping for free). */
 export function SegmentedControl<T extends string>({
@@ -40,6 +46,12 @@ export function SegmentedControl<T extends string>({
               )}
             >
               {option.label}
+              {option.hint && (
+                <>
+                  {' '}
+                  <VisuallyHidden>({option.hint})</VisuallyHidden>
+                </>
+              )}
             </span>
           </label>
         ))}
