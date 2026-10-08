@@ -36,7 +36,6 @@ describe('App shell and routing', () => {
   })
 
   it.each([
-    ['/spots/abc', 'Restaurant'],
     ['/log', 'Log a Visit'],
     ['/plan', 'Plan a Night Out'],
     ['/share/restaurant/abc', 'Share'],

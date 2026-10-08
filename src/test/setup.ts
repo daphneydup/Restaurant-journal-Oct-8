@@ -9,3 +9,6 @@ afterEach(() => {
 
 // jsdom doesn't implement scrolling; react-router's ScrollRestoration calls it.
 window.scrollTo = () => {}
+
+// jsdom has no layout engine, so scrolling an element into view is a no-op there.
+Element.prototype.scrollIntoView = () => {}

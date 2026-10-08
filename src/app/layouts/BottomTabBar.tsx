@@ -11,7 +11,7 @@ export function BottomTabBar() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <ul className="mx-auto flex max-w-lg items-end justify-around px-2">
-        {NAV_ITEMS.map(({ to, label, icon: Icon, end, primary }) => (
+        {NAV_ITEMS.map(({ to, label, tabLabel, icon: Icon, end, primary }) => (
           <li key={to} className="flex-1">
             <NavLink
               to={to}
@@ -40,12 +40,12 @@ export function BottomTabBar() {
                     </span>
                   )}
                   <span className={primary ? 'text-primary-strong' : undefined}>
-                    {primary ? (
+                    {tabLabel ?? label}
+                    {tabLabel && (
                       <>
-                        Log <VisuallyHidden>a Visit</VisuallyHidden>
+                        {' '}
+                        <VisuallyHidden>{label.slice(tabLabel.length).trim()}</VisuallyHidden>
                       </>
-                    ) : (
-                      label
                     )}
                   </span>
                 </>

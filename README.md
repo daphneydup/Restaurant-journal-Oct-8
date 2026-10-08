@@ -85,6 +85,9 @@ src/data/mock/*            in-memory data persisted to localStorage (swap for sr
   `localStorage` under `tfe:mock-db`. Bumping `MOCK_DB_VERSION` re-seeds everyone.
 - **Seed data** (`src/data/mock/seed/demo.ts`) is ten fictional Dallas restaurants with dates
   relative to the first run. `repositories.dev.resetDemoData()` regenerates it.
+- **Logging a visit is one operation.** `visits.logVisit(input)` saves the restaurant (if new),
+  the visit, its dishes and the optional go-back flag atomically, so a failure can never leave a
+  restaurant with no visit. With Supabase this becomes a single RPC/transaction.
 - **Diet lenses are data.** The UI maps over `useDietLenses()`; adding a lens means adding a
   row, not editing a component.
 
