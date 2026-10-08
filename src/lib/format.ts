@@ -1,3 +1,4 @@
+import { parseISODate } from './dates'
 import type { PriceTier, RatingValue } from '@/types'
 
 export const PRICE_TIER_LABELS: Record<PriceTier, string> = {
@@ -18,4 +19,16 @@ export const RATING_WORDS: Record<RatingValue, string> = {
   3: 'Okay',
   4: 'Good',
   5: 'Great',
+}
+
+const visitDateFormat = new Intl.DateTimeFormat('en-US', {
+  weekday: 'short',
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+})
+
+/** "Mon, Oct 5, 2026" from a `YYYY-MM-DD` visit date. */
+export function formatVisitDate(isoDate: string): string {
+  return visitDateFormat.format(parseISODate(isoDate))
 }
