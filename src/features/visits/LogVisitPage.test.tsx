@@ -120,7 +120,9 @@ describe('Log a Visit page: the 30-second path', () => {
         { lensId: 'steak', rating: 4 },
       ],
     })
-    expect(await screen.findByText(/2 visits logged/)).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 2, name: 'Visit history (2)' }),
+    ).toBeInTheDocument()
   })
 
   it('can be driven entirely from the keyboard in the search box', async () => {
