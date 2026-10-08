@@ -1,0 +1,71 @@
+/*
+ * Design tokens. Tailwind v4 reads these from CSS via @theme, so every token
+ * below becomes a utility (bg-surface, text-ink-muted, rounded-card, font-display...).
+ * All text/background pairings used by the UI meet WCAG AA (4.5:1 body, 3:1 large/UI).
+ */
+@theme {
+  /* Neutrals: warm cream surfaces, espresso ink */
+  --color-canvas: #fbf6ee;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f3eadb;
+  --color-ink: #2b1d14; /* 15:1 on canvas */
+  --color-ink-muted: #6b5645; /* 6.4:1 on canvas */
+  --color-line: #e3d6c3; /* decorative dividers only */
+  --color-line-strong: #8a7561; /* input borders, 4.2:1 on canvas (UI needs 3:1) */
+
+  /* Primary: terracotta */
+  --color-primary: #b4472a; /* white text 5.4:1 */
+  --color-primary-hover: #983a21;
+  --color-primary-soft: #f8e1d8;
+  --color-primary-strong: #7a2d17; /* text on primary-soft */
+
+  /* Secondary: basil */
+  --color-basil: #2f6b3f; /* white text 6.4:1 */
+  --color-basil-hover: #265733;
+  --color-basil-soft: #e1efdf;
+  --color-basil-strong: #1f4a2b;
+
+  /* Accent: saffron */
+  --color-saffron: #e7a226; /* ink text on saffron 8:1 */
+  --color-saffron-soft: #fcefcf;
+  --color-saffron-strong: #7a4e00; /* text on saffron-soft */
+
+  /* Feedback */
+  --color-danger: #b3261e;
+  --color-danger-hover: #961e18;
+  --color-danger-soft: #fbe3e0;
+  --color-focus: #1d4ed8;
+
+  /* Type */
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.25rem;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.375rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.4375rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl: 1.8125rem;
+  --text-2xl--line-height: 2.25rem;
+  --text-3xl: 2.25rem;
+  --text-3xl--line-height: 2.625rem;
+
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-card: 1rem;
+  --radius-sheet: 1.5rem;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgb(43 29 20 / 0.06), 0 2px 8px rgb(43 29 20 / 0.06);
+  --shadow-raised: 0 4px 16px rgb(43 29 20 / 0.14);
+
+  /* Spacing uses Tailwind's default 4px scale (p-1 = 4px ...). */
+  --spacing-touch: 2.75rem; /* 44px minimum touch target: min-h-touch / min-w-touch */
+}
