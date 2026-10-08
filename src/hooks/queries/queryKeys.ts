@@ -14,6 +14,7 @@ export const queryKeys = {
   dishes: {
     all: ['dishes'] as const,
     list: () => ['dishes', 'list'] as const,
+    detail: (id: string) => ['dishes', 'detail', id] as const,
     byRestaurant: (restaurantId: string) => ['dishes', 'byRestaurant', restaurantId] as const,
   },
   goBack: {

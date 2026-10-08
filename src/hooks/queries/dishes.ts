@@ -8,6 +8,16 @@ export function useDishes() {
   return useQuery({ queryKey: queryKeys.dishes.list(), queryFn: () => dishes.list() })
 }
 
+/** Resolves `null` (not an error) when the dish doesn't exist. */
+export function useDish(id: string | undefined) {
+  const { dishes } = useRepositories()
+  return useQuery({
+    queryKey: queryKeys.dishes.detail(id ?? ''),
+    queryFn: () => dishes.getById(id ?? ''),
+    enabled: Boolean(id),
+  })
+}
+
 export function useRestaurantDishes(restaurantId: string | undefined) {
   const { dishes } = useRepositories()
   return useQuery({
