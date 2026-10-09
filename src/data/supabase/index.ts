@@ -1,4 +1,5 @@
 import type { Repositories } from '../repositories'
+import { createSupabaseAuthRepository } from './authRepository'
 import { createSupabaseClient, type SupabaseConfig } from './client'
 import { createSessionProvider, type SupabaseContext } from './context'
 import { createSupabaseDishRepository } from './dishRepository'
@@ -27,5 +28,6 @@ export function createSupabaseRepositories(config: SupabaseConfig): Repositories
     goBack: createSupabaseGoBackRepository(ctx),
     lenses,
     user: createSupabaseUserRepository(ctx, lenses),
+    auth: createSupabaseAuthRepository(ctx),
   }
 }

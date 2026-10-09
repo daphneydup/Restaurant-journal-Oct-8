@@ -1,3 +1,4 @@
+import type { AuthRepository } from './AuthRepository'
 import type { DietLensRepository } from './DietLensRepository'
 import type { DishRepository } from './DishRepository'
 import type { GoBackRepository } from './GoBackRepository'
@@ -5,6 +6,7 @@ import type { RestaurantRepository } from './RestaurantRepository'
 import type { UserRepository } from './UserRepository'
 import type { VisitRepository } from './VisitRepository'
 
+export type { AccountChange, AuthEvent, AuthRepository } from './AuthRepository'
 export type { DietLensRepository } from './DietLensRepository'
 export type { DishRepository } from './DishRepository'
 export type { GoBackRepository } from './GoBackRepository'
@@ -32,5 +34,6 @@ export interface Repositories {
   goBack: GoBackRepository
   lenses: DietLensRepository
   user: UserRepository
+  auth: AuthRepository
   dev?: DevControls
 }

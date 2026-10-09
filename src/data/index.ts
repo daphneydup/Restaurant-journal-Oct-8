@@ -13,7 +13,7 @@ import { createMockRepositories } from './mock'
 import type { Repositories } from './repositories'
 
 export type { Repositories } from './repositories'
-export type { DevControls } from './repositories'
+export type { AccountChange, AuthEvent, AuthRepository, DevControls } from './repositories'
 export { RepositoryError, isRepositoryError, type RepositoryErrorCode } from './errors'
 
 export interface DataEnv {

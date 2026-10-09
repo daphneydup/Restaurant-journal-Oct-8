@@ -27,6 +27,41 @@ export const FAKE_TOKEN = `${b64({ alg: 'HS256', typ: 'JWT' })}.${b64({
 
 export const FAKE_USER_ID = 'user-1'
 
+/** A Supabase auth user. Defaults to an anonymous guest; pass overrides for a member. */
+export function authUserBody(overrides: Record<string, unknown> = {}) {
+  return {
+    id: FAKE_USER_ID,
+    aud: 'authenticated',
+    role: 'authenticated',
+    is_anonymous: true,
+    app_metadata: {},
+    user_metadata: {},
+    created_at: '2026-10-08T12:00:00.123456Z',
+    ...overrides,
+  }
+}
+
+/** The body Supabase returns after signing in. */
+export function sessionBody(userOverrides: Record<string, unknown> = {}) {
+  return {
+    access_token: FAKE_TOKEN,
+    token_type: 'bearer',
+    expires_in: 3600,
+    expires_at: 4_000_000_000,
+    refresh_token: 'refresh-token',
+    user: authUserBody(userOverrides),
+  }
+}
+
+/** A permanent (non-guest) user with a confirmed email. */
+export const memberBody = (email = 'summer@example.com', overrides: Record<string, unknown> = {}) =>
+  authUserBody({
+    is_anonymous: false,
+    email,
+    email_confirmed_at: '2026-10-08T12:00:00Z',
+    ...overrides,
+  })
+
 export const URL_BASE = 'https://fake-project.supabase.co'
 export const ANON_KEY = 'fake-anon-key'
 
@@ -100,25 +135,9 @@ export function createFakeSupabase() {
     })
   }
 
-  // Anonymous sign-in succeeds by default.
-  on('POST', /\/auth\/v1\/signup$/, {
-    body: {
-      access_token: FAKE_TOKEN,
-      token_type: 'bearer',
-      expires_in: 3600,
-      expires_at: 4_000_000_000,
-      refresh_token: 'refresh-token',
-      user: {
-        id: FAKE_USER_ID,
-        aud: 'authenticated',
-        role: 'authenticated',
-        is_anonymous: true,
-        app_metadata: {},
-        user_metadata: {},
-        created_at: '2026-10-08T12:00:00Z',
-      },
-    },
-  })
+  // Anonymous sign-in and sign-out succeed by default.
+  on('POST', /\/auth\/v1\/signup$/, () => ({ body: sessionBody() }))
+  on('POST', /\/auth\/v1\/logout$/, { status: 204 })
 
   function repositories() {
     return createSupabaseRepositories({

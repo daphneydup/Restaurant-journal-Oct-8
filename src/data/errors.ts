@@ -11,6 +11,18 @@ export type RepositoryErrorCode =
   | 'unavailable'
   /** Local storage is full (mock layer; photos are the usual cause). */
   | 'storage_full'
+  /** Wrong email or password. */
+  | 'invalid_credentials'
+  /** Sign-up with an email that already has an account. */
+  | 'email_taken'
+  /** The password was rejected as too weak. */
+  | 'weak_password'
+  /** The email address has not been confirmed yet. */
+  | 'email_not_confirmed'
+  /** Too many attempts; try again later. */
+  | 'rate_limited'
+  /** The action needs a signed-in account (a guest can't do it). */
+  | 'not_authenticated'
 
 /**
  * The only error type repositories throw. UI code branches on `code`, so future

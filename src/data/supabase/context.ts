@@ -10,17 +10,18 @@ export interface SupabaseContext {
 }
 
 /**
- * Row-level security needs an identity, but this phase has no login screen. So the first call
- * signs in anonymously (Supabase keeps that session in the browser). The same person returns to
- * the same data until they clear site data; real accounts can replace this later.
+ * Row-level security needs an identity, but a visitor shouldn't have to log in to start. So when
+ * there is no session the first request signs in anonymously (a "guest"). Supabase keeps that
+ * session in the browser; the guest can later turn it into a real account without losing data.
+ *
+ * The session is looked up on EVERY call (it is a cheap local read) rather than remembered, so
+ * logging out or deleting an account is noticed and the next request starts a fresh guest.
+ * Only the sign-in itself is shared, so simultaneous requests start one guest, not several.
  */
 export function createSessionProvider(client: SupabaseClient): () => Promise<string> {
-  let pending: Promise<string> | null = null
+  let signingIn: Promise<string> | null = null
 
-  async function start(): Promise<string> {
-    const { data: existing } = await client.auth.getSession()
-    if (existing.session) return existing.session.user.id
-
+  async function startGuest(): Promise<string> {
     const { data, error } = await client.auth.signInAnonymously()
     if (error || !data.user) {
       throw new RepositoryError(
@@ -32,12 +33,13 @@ export function createSessionProvider(client: SupabaseClient): () => Promise<str
     return data.user.id
   }
 
-  return () => {
-    pending ??= start().catch((error: unknown) => {
-      pending = null // let the next call retry instead of caching the failure
-      throw error
+  return async () => {
+    const { data } = await client.auth.getSession()
+    if (data.session) return data.session.user.id
+    signingIn ??= startGuest().finally(() => {
+      signingIn = null
     })
-    return pending
+    return signingIn
   }
 }
 

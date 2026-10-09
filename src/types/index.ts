@@ -1,3 +1,4 @@
+export * from './account'
 export * from './common'
 export * from './dietLens'
 export * from './dietRating'

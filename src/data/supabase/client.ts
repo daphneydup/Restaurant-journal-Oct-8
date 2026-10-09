@@ -16,7 +16,8 @@ export function createSupabaseClient({
   persistSession = true,
 }: SupabaseConfig): SupabaseClient {
   return createClient(url, anonKey, {
-    auth: { persistSession, autoRefreshToken: persistSession, detectSessionInUrl: false },
+    // detectSessionInUrl lets the password-reset link in an email sign the user in.
+    auth: { persistSession, autoRefreshToken: persistSession, detectSessionInUrl: persistSession },
     // Fail fast. By default a failed read silently retries for about 7 seconds, which on a poor
     // connection looks like a hung screen. The app already retries once and offers "Try again".
     db: { retry: false },

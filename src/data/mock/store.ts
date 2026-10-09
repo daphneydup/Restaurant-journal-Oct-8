@@ -26,8 +26,10 @@ export interface MockStore {
   commit(update: (db: MockDb) => MockDb): void
   /** Throws away all data and re-seeds. */
   reset(): void
+  /** Deletes everything the user logged (restaurants, visits, dishes, go-back), keeping the diets. */
+  wipe(): void
   /** Wraps one repository call with latency and simulated failure, then runs `operation`. */
-  run<T>(operation: () => T): Promise<T>
+  run<T>(operation: () => T | Promise<T>): Promise<T>
   setSimulateErrors(enabled: boolean): void
   isSimulatingErrors(): boolean
   newId(): string
@@ -104,6 +106,18 @@ export function createMockStore(options: MockStoreOptions = {}): MockStore {
     },
     reset() {
       db = seeded()
+    },
+    wipe() {
+      const fresh = seed(now())
+      const next: MockDb = {
+        ...fresh,
+        restaurants: [],
+        visits: [],
+        dishes: [],
+        goBackEntries: [],
+      }
+      persist(next)
+      db = next
     },
     async run(operation) {
       await pause()
