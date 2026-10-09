@@ -5,7 +5,7 @@ steak lovers). Log a visit in about 30 seconds, rate how well it worked for each
 reuse a trusted shortlist when planning the next night out.
 
 **Screens:** My Spots (search and filters) · Log a Visit · Restaurant Detail · Go Back list ·
-Plan a Night Out · Share card · Profile.
+Plan a Night Out · Share card · Profile · Log in / Sign up / Forgot password · Account.
 
 The app runs in one of two modes, chosen by environment variables:
 
@@ -25,27 +25,67 @@ npm run dev      # http://localhost:5173, runs on demo data
 
 ### Connect to Supabase
 
-1. **Create the tables.** In the Supabase dashboard open **SQL Editor**, paste the contents of
-   [`supabase/migrations/20261008000000_init.sql`](supabase/migrations/20261008000000_init.sql) and run
-   it once. (Or use the Supabase CLI: `supabase db push`.) It creates the tables, the security
-   rules, the `log_visit` function and the six dietary lenses.
+1. **Create the tables.** In the Supabase dashboard open **SQL Editor** and run these two files, in
+   order (or use the Supabase CLI: `supabase db push`):
+   1. [`supabase/migrations/20261008000000_init.sql`](supabase/migrations/20261008000000_init.sql):
+      tables, security rules, the `log_visit` function and the six dietary lenses.
+   2. [`supabase/migrations/20261009000000_account_deletion.sql`](supabase/migrations/20261009000000_account_deletion.sql):
+      the `delete_my_account` function behind **Delete account**.
 2. **Allow anonymous sign-ins.** Dashboard → **Authentication → Providers → Anonymous Sign-Ins** → on.
-   The app has no login screen yet, so it signs each browser in anonymously. Every row is owned
-   by that identity and row-level security means nobody can see anyone else's data.
-3. **Add your keys.** Copy [`.env.example`](.env.example) to `.env.local` (git ignores it) and fill
+   Visitors start as a _guest_ with no login screen, and every row is owned by that identity.
+   Row-level security means nobody can see anyone else's data.
+3. **Check the email settings** (needed for accounts, see [Accounts and login](#accounts-and-login)):
+   **Authentication → URL Configuration**: set **Site URL** to `http://localhost:5173` for development
+   (your real address in production) and add `http://localhost:5173/**` to **Redirect URLs**.
+4. **Add your keys.** Copy [`.env.example`](.env.example) to `.env.local` (git ignores it) and fill
    in the **anon public** key from **Project Settings → API**. The project URL is already filled in.
    Never use the `service_role` key in this app: it bypasses all security.
-4. **Restart `npm run dev`.** Open **Profile**: it should say "Saved to your Supabase project".
+5. **Restart `npm run dev`.** Open **Profile**: it should say "Saved to your Supabase project".
 
 If the key is missing the app quietly stays on demo data. If anonymous sign-ins are off, or the
 tables don't exist yet, every screen shows its normal error state with a **Try again** button.
 
 **Good to know**
 
-- Anonymous users keep their data only while that browser keeps its site data. Clearing it (or
-  using another browser) starts a fresh, empty journal. Real accounts are the next step.
+- A guest keeps their journal only while that browser keeps its site data. Clearing it (or using
+  another browser) starts an empty journal. **Creating an account** is how a journal is kept safe
+  and used on other devices.
 - Photos are stored as small downscaled images inside the row (about 100 KB each, up to 3 per
   visit). Supabase Storage would be the better home once photos matter.
+
+## Accounts and login
+
+Visitors can use the whole app immediately as a **guest**. When they are ready, they create an
+account and **the same journal comes with them**: signing up upgrades the guest in place (same user
+id), nothing is copied or lost.
+
+| CRUD         | What the person does                                      | Where                                             | How                                        |
+| ------------ | --------------------------------------------------------- | ------------------------------------------------- | ------------------------------------------ |
+| **Create**   | Sign up with email + password                             | `/signup`                                         | upgrades the guest (`auth.updateUser`)     |
+| **Read**     | See status, email, member-since                           | `/account`, Profile                               | `auth.getSession`                          |
+| **Update**   | Change email, change password, reset a forgotten password | `/account`, `/forgot-password`, `/reset-password` | `auth.updateUser`, `resetPasswordForEmail` |
+| **Delete**   | Delete the account and everything in it                   | `/account` (type `DELETE` to confirm)             | `delete_my_account()` SQL function         |
+| Log in / out | Return to a saved journal, or leave                       | `/login`, `/account`                              | `signInWithPassword`, `signOut`            |
+
+Things worth knowing:
+
+- **Logging in as someone else replaces the guest journal.** The guest's data stays under the guest
+  identity and can't be reached again, so the log-in screen and "Leave guest session" both warn.
+  Create an account first to keep it.
+- **Switching people never leaks data.** `src/app/AuthSync.tsx` discards every cached screen when
+  the _person_ changes (log out, or log in as someone else) but not when the same person changes
+  their email or a guest becomes a member.
+- **Messages never reveal who has an account.** A wrong password and an unknown email give the same
+  answer, and "forgot password" says the same thing for any address.
+- **Email confirmation is your choice.** With **Authentication → Providers → Email → Confirm email**
+  on, a new account (and a changed email) stays pending until the link is clicked; the app says
+  "Check your email" and shows the pending address on `/account`. Turn it off for instant sign-up.
+  Supabase's built-in mailer is rate limited; configure SMTP before real users arrive.
+- **Password rules:** at least 8 characters (the form), plus whatever **Authentication → Policies**
+  adds (the app shows "too easy to guess" when a project rule rejects it).
+- **Demo mode has accounts too**, so every screen can be tried without a server. They live in this
+  browser, store only a salted hash, share one journal, and protect nothing. Use Supabase for real
+  security.
 
 ## Scripts
 
@@ -72,7 +112,7 @@ ESLint + Prettier.
 src/
   app/        router (lazy-loaded screens), providers, layout shell (SideNav md+, BottomTabBar below)
   components/ reusable UI primitives (Button, Chip, Dialog, RatingInput, Combobox, Toast, ...)
-  features/   one folder per area: restaurants, visits, go-back, plan-night, share, profile
+  features/   one folder per area: restaurants, visits, go-back, plan-night, share, profile, account
   data/       repository interfaces, the mock and Supabase implementations, and index.ts (the DI point)
   hooks/      shared hooks; TanStack Query hooks live in hooks/queries
   lib/        pure helpers: diet-fit maths, dates, relative time, formatting, clipboard, images
@@ -134,7 +174,7 @@ requires every data screen to have loading and error-with-retry states.
 
 ## Testing
 
-`npm test` runs ~520 tests: schemas, the mock repositories, the Supabase repositories (the real
+`npm test` runs ~700 tests: schemas, the mock repositories, the Supabase repositories (the real
 `supabase-js` client against a recording fake HTTP server, so request shapes and error mapping are
 checked), the matching logic, every screen's loading / empty / error / success states, and the
 Log a Visit form's validation.
@@ -152,5 +192,5 @@ than Supabase (or to change how Supabase is used):
 3. Leave `src/data/mock` in place: the tests and the demo mode still use it.
 
 Nothing in `components/`, `features/`, `hooks/` or `lib/` changes. If you later add real accounts,
-replace the anonymous sign-in in `src/data/supabase/context.ts` (`createSessionProvider`); the
-SQL already scopes every row to `auth.uid()`.
+change `createSessionProvider` in `src/data/supabase/context.ts`; the SQL already scopes every row
+to `auth.uid()`, and email + password accounts are already built (see above).

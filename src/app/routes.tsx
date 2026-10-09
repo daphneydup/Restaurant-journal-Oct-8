@@ -57,6 +57,36 @@ export const routes: RouteObject[] = [
           Component: (await import('@/features/profile/ProfilePage')).ProfilePage,
         }),
       },
+      {
+        path: 'login',
+        lazy: async () => ({
+          Component: (await import('@/features/account/LoginPage')).LoginPage,
+        }),
+      },
+      {
+        path: 'signup',
+        lazy: async () => ({
+          Component: (await import('@/features/account/SignUpPage')).SignUpPage,
+        }),
+      },
+      {
+        path: 'forgot-password',
+        lazy: async () => ({
+          Component: (await import('@/features/account/ForgotPasswordPage')).ForgotPasswordPage,
+        }),
+      },
+      {
+        path: 'reset-password',
+        lazy: async () => ({
+          Component: (await import('@/features/account/ResetPasswordPage')).ResetPasswordPage,
+        }),
+      },
+      {
+        path: 'account',
+        lazy: async () => ({
+          Component: (await import('@/features/account/AccountPage')).AccountPage,
+        }),
+      },
       { path: '*', element: <NotFound /> },
     ],
   },

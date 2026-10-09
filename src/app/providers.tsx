@@ -3,6 +3,7 @@ import { useState, type ReactNode } from 'react'
 import { ToastProvider } from '@/components'
 import type { Repositories } from '@/data'
 import { RepositoryProvider } from '@/data/RepositoryProvider'
+import { AuthSync } from './AuthSync'
 import { createQueryClient } from './queryClient'
 
 /**
@@ -22,7 +23,10 @@ export function AppProviders({
   return (
     <RepositoryProvider repositories={repositories}>
       <QueryClientProvider client={client}>
-        <ToastProvider>{children}</ToastProvider>
+        <ToastProvider>
+          <AuthSync />
+          {children}
+        </ToastProvider>
       </QueryClientProvider>
     </RepositoryProvider>
   )

@@ -26,6 +26,10 @@ export const queryKeys = {
     all: ['lenses'] as const,
     list: () => ['lenses', 'list'] as const,
   },
+  account: {
+    all: ['auth'] as const,
+    current: () => ['auth', 'user'] as const,
+  },
   profile: {
     all: ['profile'] as const,
     current: () => ['profile', 'current'] as const,

@@ -17,6 +17,7 @@ const DATA_SCREENS = [
   { name: 'Share (restaurant)', path: '/share/restaurant/r-ember' },
   { name: 'Share (dish)', path: '/share/dish/d-1' },
   { name: 'Profile', path: '/profile' },
+  { name: 'Account', path: '/account' },
 ]
 
 describe.each(DATA_SCREENS)('$name', ({ path }) => {

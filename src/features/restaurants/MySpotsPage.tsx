@@ -14,6 +14,7 @@ import {
 import { useDietLenses } from '@/hooks/queries'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useNow } from '@/hooks/useNow'
+import { GuestBanner } from '@/features/account/GuestBanner'
 import { FiltersSheet } from './FiltersSheet'
 import { SpotCard } from './SpotCard'
 import {
@@ -121,6 +122,8 @@ export function MySpotsPage() {
         description="Your trusted shortlist of places that work for everyone."
         actions={<ButtonLink to="/log">Log a visit</ButtonLink>}
       />
+
+      {spots && spots.length > 0 && <GuestBanner />}
 
       <div className="mb-5 flex gap-2">
         <div className="min-w-0 flex-1">
