@@ -1,3 +1,4 @@
+import { randomId } from '@/lib/uuid'
 import { RepositoryError } from '../errors'
 import type { AccountChange, AuthEvent, AuthRepository } from '../repositories'
 import { parseOrThrow } from '../validation'
@@ -62,7 +63,7 @@ export function createMockAuthRepository({
   }
 
   const newGuest = (): Session => ({
-    userId: `guest-${crypto.randomUUID()}`,
+    userId: `guest-${randomId()}`,
     email: null,
     isGuest: true,
     createdAt: store.now().toISOString(),

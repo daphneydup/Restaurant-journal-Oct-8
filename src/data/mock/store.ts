@@ -1,3 +1,4 @@
+import { randomId } from '@/lib/uuid'
 import { RepositoryError } from '../errors'
 import { mockDbSchema, type MockDb } from './db'
 import { buildDemoSeed } from './seed/demo'
@@ -53,7 +54,7 @@ export function createMockStore(options: MockStoreOptions = {}): MockStore {
     seed = buildDemoSeed,
     now = () => new Date(),
     random = Math.random,
-    newId = () => crypto.randomUUID(),
+    newId = randomId,
   } = options
 
   let simulateErrors = false
