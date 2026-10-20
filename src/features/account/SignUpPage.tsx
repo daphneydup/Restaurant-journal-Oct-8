@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MailCheck } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import {
@@ -13,7 +13,10 @@ import {
   useToast,
 } from '@/components'
 import { useAccount, useSignUp } from '@/hooks/queries'
+import { TestimonialCarousel } from '@/features/testimonials/TestimonialCarousel'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { pendingReferral, subscribeToPendingReferral } from '@/lib/pendingReferral'
+import { POINTS } from '@/lib/rewardRules'
 import { AuthCard, FormError, Notice } from './AuthCard'
 import { describeAuthError } from './authMessages'
 import { signUpSchema, type SignUpValues } from './schemas'
@@ -24,6 +27,7 @@ export function SignUpPage() {
   const { showToast } = useToast()
   const account = useAccount()
   const signUp = useSignUp()
+  const invite = useSyncExternalStore(subscribeToPendingReferral, pendingReferral, () => null)
   const [formError, setFormError] = useState<string | null>(null)
   const [confirmEmail, setConfirmEmail] = useState<string | null>(null)
   const form = useForm<SignUpValues>({
@@ -90,6 +94,12 @@ export function SignUpPage() {
       />
       <AuthCard>
         <Notice>Everything you’ve logged so far comes with you.</Notice>
+        {invite && (
+          <Notice>
+            A friend’s invite is waiting: you’ll get {POINTS.referral} bonus points as soon as your
+            account is ready.
+          </Notice>
+        )}
         <form
           noValidate
           onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
@@ -135,6 +145,9 @@ export function SignUpPage() {
           </Link>
         </p>
       </AuthCard>
+      <div className="mx-auto mt-6 max-w-md">
+        <TestimonialCarousel />
+      </div>
     </>
   )
 }

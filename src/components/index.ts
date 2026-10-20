@@ -1,5 +1,6 @@
 export { Button, ButtonLink } from './Button'
 export { Card } from './Card'
+export { Carousel } from './Carousel'
 export { Chip } from './Chip'
 export { Combobox, type ComboboxOption } from './Combobox'
 export { ConfirmDialog } from './ConfirmDialog'

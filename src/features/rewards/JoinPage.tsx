@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useSearchParams } from 'react-router'
 import { ButtonLink, Card, PageHeader } from '@/components'
+import { TestimonialCarousel } from '@/features/testimonials/TestimonialCarousel'
 import { useAccount } from '@/hooks/queries'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { rememberReferral } from '@/lib/pendingReferral'
@@ -66,6 +67,9 @@ export function JoinPage() {
           </div>
         )}
       </Card>
+      <div className="mt-6">
+        <TestimonialCarousel />
+      </div>
     </>
   )
 }

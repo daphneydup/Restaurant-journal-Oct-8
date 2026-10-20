@@ -23,6 +23,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useNow } from '@/hooks/useNow'
 import { pointsToNextReward, voucherState } from '@/lib/rewardRules'
 import type { Reward, Voucher } from '@/types'
+import { TestimonialCarousel } from '@/features/testimonials/TestimonialCarousel'
 import { BalanceHero } from './BalanceHero'
 import { HowYouEarn } from './HowYouEarn'
 import { PointsHistory } from './PointsHistory'
@@ -124,6 +125,8 @@ export function RewardsPage() {
         </section>
 
         <HowYouEarn />
+
+        <TestimonialCarousel />
 
         <Disclosure
           label="Points history"
