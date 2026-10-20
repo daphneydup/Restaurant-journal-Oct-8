@@ -22,7 +22,11 @@ export function useCreateVisit() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (input: VisitInput) => visits.create(input),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.visits.all }),
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.visits.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.rewards.all }),
+      ]),
   })
 }
 
@@ -64,6 +68,7 @@ export function useLogVisit() {
         queryClient.invalidateQueries({ queryKey: queryKeys.visits.all }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dishes.all }),
         queryClient.invalidateQueries({ queryKey: queryKeys.goBack.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.rewards.all }),
       ]),
   })
 }

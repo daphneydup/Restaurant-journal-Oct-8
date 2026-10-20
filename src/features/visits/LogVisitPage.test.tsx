@@ -107,7 +107,9 @@ describe('Log a Visit page: the 30-second path', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Noodle & Nori' }),
     ).toBeInTheDocument()
-    expect(await screen.findByText('Visit saved at Noodle & Nori')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Visit saved at Noodle & Nori. You earned 50 points.'),
+    ).toBeInTheDocument()
 
     const after = await repos.visits.listByRestaurant('r-noodle')
     expect(after).toHaveLength(before.length + 1)

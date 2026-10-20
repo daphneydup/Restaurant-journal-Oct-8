@@ -175,7 +175,11 @@ export function LogVisitForm({
     setSubmitError(null)
     try {
       const result = await logVisit.mutateAsync(toLogVisitInput(valid, { city: homeCity }))
-      showToast(`Visit saved at ${result.restaurant.name}`)
+      showToast(
+        result.pointsEarned > 0
+          ? `Visit saved at ${result.restaurant.name}. You earned ${result.pointsEarned} points.`
+          : `Visit saved at ${result.restaurant.name}`,
+      )
       void navigate(`/spots/${result.restaurant.id}`)
     } catch (error) {
       if (isRepositoryError(error) && error.code === 'conflict') {

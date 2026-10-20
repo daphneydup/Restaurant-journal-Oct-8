@@ -52,6 +52,24 @@ export const routes: RouteObject[] = [
         }),
       },
       {
+        path: 'rewards',
+        lazy: async () => ({
+          Component: (await import('@/features/rewards/RewardsPage')).RewardsPage,
+        }),
+      },
+      {
+        path: 'invite',
+        lazy: async () => ({
+          Component: (await import('@/features/rewards/InvitePage')).InvitePage,
+        }),
+      },
+      {
+        path: 'join',
+        lazy: async () => ({
+          Component: (await import('@/features/rewards/JoinPage')).JoinPage,
+        }),
+      },
+      {
         path: 'profile',
         lazy: async () => ({
           Component: (await import('@/features/profile/ProfilePage')).ProfilePage,

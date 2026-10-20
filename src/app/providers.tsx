@@ -3,6 +3,7 @@ import { useState, type ReactNode } from 'react'
 import { ToastProvider } from '@/components'
 import type { Repositories } from '@/data'
 import { RepositoryProvider } from '@/data/RepositoryProvider'
+import { ReferralClaimer } from '@/features/rewards/ReferralClaimer'
 import { AuthSync } from './AuthSync'
 import { createQueryClient } from './queryClient'
 
@@ -25,6 +26,7 @@ export function AppProviders({
       <QueryClientProvider client={client}>
         <ToastProvider>
           <AuthSync />
+          <ReferralClaimer />
           {children}
         </ToastProvider>
       </QueryClientProvider>

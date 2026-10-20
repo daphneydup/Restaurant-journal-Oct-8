@@ -16,6 +16,8 @@ const DATA_SCREENS = [
   { name: 'Plan a Night Out', path: '/plan' },
   { name: 'Share (restaurant)', path: '/share/restaurant/r-ember' },
   { name: 'Share (dish)', path: '/share/dish/d-1' },
+  { name: 'Rewards', path: '/rewards' },
+  { name: 'Invite friends', path: '/invite' },
   { name: 'Profile', path: '/profile' },
   { name: 'Account', path: '/account' },
 ]

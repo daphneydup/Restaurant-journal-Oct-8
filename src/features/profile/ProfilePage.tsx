@@ -2,6 +2,7 @@ import { ErrorState, LoadingRegion, PageHeader, Skeleton } from '@/components'
 import { useDietLenses, useProfile } from '@/hooks/queries'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { AccountSummaryCard } from '@/features/account/AccountSummaryCard'
+import { RewardsLinkCard } from '@/features/rewards/RewardsLinkCard'
 import { DataSourceNote } from './DataSourceNote'
 import { DevTools } from './DevTools'
 import { ProfileForm } from './ProfileForm'
@@ -41,6 +42,7 @@ export function ProfilePage() {
       <PageHeader title="Profile" description="Your name, default diets and home city." />
       <div className="flex flex-col gap-5">
         <AccountSummaryCard />
+        <RewardsLinkCard />
         {body}
         <DataSourceNote />
         <DevTools />

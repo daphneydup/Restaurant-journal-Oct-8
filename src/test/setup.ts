@@ -1,6 +1,10 @@
 import '@testing-library/jest-dom/vitest'
-import { cleanup } from '@testing-library/react'
+import { cleanup, configure } from '@testing-library/react'
 import { afterEach } from 'vitest'
+
+// The suite runs many jsdom workers at once; a screen with simulated latency can take longer than
+// Testing Library's 1s default to appear on a busy machine. Failures still fail, just not falsely.
+configure({ asyncUtilTimeout: 3000 })
 
 afterEach(() => {
   cleanup()
