@@ -10,7 +10,9 @@ import {
   useToast,
 } from '@/components'
 import { CopyLinkPanel } from '@/features/share/CopyLinkPanel'
-import { useReferral } from '@/hooks/queries'
+import { ShareActions } from '@/features/share/ShareActions'
+import { inviteShareContent } from '@/features/share/shareContent'
+import { useProfile, useReferral } from '@/hooks/queries'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { copyToClipboard } from '@/lib/clipboard'
 import { POINTS } from '@/lib/rewardRules'
@@ -66,6 +68,7 @@ function CodeCard({ code }: { code: string }) {
 export function InvitePage() {
   useDocumentTitle('Invite friends')
   const referral = useReferral()
+  const profile = useProfile()
 
   let body
   if (referral.isError) {
@@ -89,6 +92,8 @@ export function InvitePage() {
           label="Your invite link"
           note="Friends who open this link and create an account both earn the bonus."
         />
+
+        <ShareActions content={inviteShareContent(profile.data?.displayName ?? 'A friend')} />
 
         <Card>
           <h2 className="text-lg">How it works</h2>

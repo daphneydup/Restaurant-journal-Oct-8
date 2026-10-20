@@ -19,6 +19,8 @@ import {
 } from '@/hooks/queries'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { CopyLinkPanel } from './CopyLinkPanel'
+import { ShareActions } from './ShareActions'
+import { dishShareContent, restaurantShareContent } from './shareContent'
 import { DishShareCard, RestaurantShareCard } from './ShareCard'
 
 function Frame({ children, back }: { children: React.ReactNode; back: string }) {
@@ -75,6 +77,15 @@ function RestaurantShare({ id }: { id: string }) {
         lenses={lenses.data}
         sharedBy={profile.data.displayName}
       />
+      <ShareActions
+        content={restaurantShareContent({
+          restaurant: restaurant.data,
+          visits: visits.data,
+          dishes: dishes.data,
+          lenses: lenses.data,
+          sharedBy: profile.data.displayName,
+        })}
+      />
       <CopyLinkPanel path={`/share/restaurant/${id}`} />
     </Frame>
   )
@@ -106,6 +117,14 @@ function DishShare({ id }: { id: string }) {
         restaurant={restaurant.data}
         lenses={lenses.data}
         sharedBy={profile.data.displayName}
+      />
+      <ShareActions
+        content={dishShareContent({
+          dish: dish.data,
+          restaurant: restaurant.data,
+          lenses: lenses.data,
+          sharedBy: profile.data.displayName,
+        })}
       />
       <CopyLinkPanel path={`/share/dish/${id}`} />
     </Frame>
