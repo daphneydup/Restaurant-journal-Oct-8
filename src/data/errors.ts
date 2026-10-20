@@ -23,6 +23,8 @@ export type RepositoryErrorCode =
   | 'rate_limited'
   /** The action needs a signed-in account (a guest can't do it). */
   | 'not_authenticated'
+  /** A reward costs more points than the person has. */
+  | 'insufficient_points'
 
 /**
  * The only error type repositories throw. UI code branches on `code`, so future

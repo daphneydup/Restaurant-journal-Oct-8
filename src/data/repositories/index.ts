@@ -3,6 +3,7 @@ import type { DietLensRepository } from './DietLensRepository'
 import type { DishRepository } from './DishRepository'
 import type { GoBackRepository } from './GoBackRepository'
 import type { RestaurantRepository } from './RestaurantRepository'
+import type { RewardsRepository } from './RewardsRepository'
 import type { UserRepository } from './UserRepository'
 import type { VisitRepository } from './VisitRepository'
 
@@ -12,6 +13,7 @@ export type { DishRepository } from './DishRepository'
 export type { GoBackRepository } from './GoBackRepository'
 export type { Repository } from './Repository'
 export type { RestaurantRepository } from './RestaurantRepository'
+export type { RewardsRepository } from './RewardsRepository'
 export type { UserRepository } from './UserRepository'
 export type { VisitRepository } from './VisitRepository'
 
@@ -34,6 +36,7 @@ export interface Repositories {
   goBack: GoBackRepository
   lenses: DietLensRepository
   user: UserRepository
+  rewards: RewardsRepository
   auth: AuthRepository
   dev?: DevControls
 }

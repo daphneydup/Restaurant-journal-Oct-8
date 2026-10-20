@@ -3,10 +3,12 @@ import {
   visitInputSchema,
   visitSchema,
   type Dish,
+  type PointsEntry,
   type GoBackEntry,
   type Restaurant,
   type Visit,
 } from '@/types'
+import { awardForVisit } from '@/lib/rewardRules'
 import { RepositoryError } from '../errors'
 import type { VisitRepository } from '../repositories'
 import {
@@ -31,6 +33,27 @@ export function createMockVisitRepository(store: MockStore): VisitRepository {
       db,
       visit.ratings.map((r) => r.lensId),
     )
+  }
+
+  /** The ledger line a new visit earns, or none when a daily limit was reached (see rewardRules). */
+  const awardFor = (visit: Visit, restaurant: Restaurant, now: Date): PointsEntry | null => {
+    const award = awardForVisit({
+      visit,
+      restaurantId: restaurant.id,
+      restaurantName: restaurant.name,
+      ledger: store.read().rewards.ledger,
+      now,
+    })
+    return award
+      ? {
+          id: store.newId(),
+          kind: 'visit',
+          points: award.points,
+          label: award.label,
+          restaurantId: restaurant.id,
+          createdAt: now.toISOString(),
+        }
+      : null
   }
 
   return {
@@ -105,9 +128,14 @@ export function createMockVisitRepository(store: MockStore): VisitRepository {
             ? { id: store.newId(), restaurantId: restaurant.id, addedAt: now }
             : null
 
+        const earned = awardFor(visit, restaurant, store.now())
+
         // One commit = all or nothing.
         store.commit((current) => ({
           ...current,
+          rewards: earned
+            ? { ...current.rewards, ledger: [...current.rewards.ledger, earned] }
+            : current.rewards,
           restaurants: createdRestaurant
             ? [...current.restaurants, restaurant]
             : current.restaurants,
@@ -118,7 +146,13 @@ export function createMockVisitRepository(store: MockStore): VisitRepository {
             : current.goBackEntries,
         }))
 
-        return clone({ restaurant, visit, dishes, createdRestaurant })
+        return clone({
+          restaurant,
+          visit,
+          dishes,
+          createdRestaurant,
+          pointsEarned: earned?.points ?? 0,
+        })
       }),
 
     getById: (id) => store.run(() => clone(store.read().visits.find((v) => v.id === id) ?? null)),
@@ -128,7 +162,13 @@ export function createMockVisitRepository(store: MockStore): VisitRepository {
         const data = parseOrThrow(visitInputSchema, input)
         assertReferences(data)
         const visit: Visit = { id: store.newId(), ...data, createdAt: store.now().toISOString() }
-        store.commit((db) => ({ ...db, visits: [...db.visits, visit] }))
+        const restaurant = store.read().restaurants.find((r) => r.id === data.restaurantId)
+        const earned = restaurant ? awardFor(visit, restaurant, store.now()) : null
+        store.commit((db) => ({
+          ...db,
+          visits: [...db.visits, visit],
+          rewards: earned ? { ...db.rewards, ledger: [...db.rewards.ledger, earned] } : db.rewards,
+        }))
         return clone(visit)
       }),
 

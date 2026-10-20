@@ -37,4 +37,6 @@ export interface LogVisitResult {
   dishes: Dish[]
   /** True when the restaurant was created by this call. */
   createdRestaurant: boolean
+  /** Reward points this visit earned (0 when a daily limit was reached). */
+  pointsEarned: number
 }

@@ -27,7 +27,7 @@ export interface MockStore {
   commit(update: (db: MockDb) => MockDb): void
   /** Throws away all data and re-seeds. */
   reset(): void
-  /** Deletes everything the user logged (restaurants, visits, dishes, go-back), keeping the diets. */
+  /** Deletes everything the user logged (restaurants, visits, dishes, go-back) and their rewards, keeping the diets. */
   wipe(): void
   /** Wraps one repository call with latency and simulated failure, then runs `operation`. */
   run<T>(operation: () => T | Promise<T>): Promise<T>
@@ -116,6 +116,8 @@ export function createMockStore(options: MockStoreOptions = {}): MockStore {
         visits: [],
         dishes: [],
         goBackEntries: [],
+        // A deleted account takes its points, vouchers and invite state with it.
+        rewards: { ledger: [], vouchers: [], referralCode: null, claimedCode: null },
       }
       persist(next)
       db = next

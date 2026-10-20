@@ -30,6 +30,34 @@ export function mapError(error: ErrorLike): RepositoryError {
     case '22008': // datetime_field_overflow
     case '22023': // invalid_parameter_value
       return new RepositoryError('validation', error.message, cause)
+    // Raised by the rewards functions (see the rewards migration).
+    case 'TF001':
+      return new RepositoryError(
+        'insufficient_points',
+        'You don’t have enough points for that.',
+        cause,
+      )
+    case 'TF002':
+      return new RepositoryError('not_found', 'That invite code doesn’t match anyone.', cause)
+    case 'TF003':
+      return new RepositoryError('conflict', 'You’ve already used an invite.', cause)
+    case 'TF004':
+      return new RepositoryError('validation', 'You can’t use your own invite code.', cause)
+    case 'TF005':
+      return new RepositoryError(
+        'not_authenticated',
+        'Create an account and confirm your email to claim an invite.',
+        cause,
+      )
+    case 'TF006':
+    case 'TF008':
+      return new RepositoryError('not_found', 'That is no longer available.', cause)
+    case 'TF007':
+      return new RepositoryError(
+        'conflict',
+        'This voucher has already been used or has expired.',
+        cause,
+      )
     case 'PGRST116': // a single row was expected but none was found
       return new RepositoryError('not_found', 'That was not found.', cause)
     default:

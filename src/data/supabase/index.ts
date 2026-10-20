@@ -6,6 +6,7 @@ import { createSupabaseDishRepository } from './dishRepository'
 import { createSupabaseGoBackRepository } from './goBackRepository'
 import { createLensCache } from './lensRepository'
 import { createSupabaseRestaurantRepository } from './restaurantRepository'
+import { createSupabaseRewardsRepository } from './rewardsRepository'
 import { createSupabaseUserRepository } from './userRepository'
 import { createSupabaseVisitRepository } from './visitRepository'
 
@@ -28,6 +29,7 @@ export function createSupabaseRepositories(config: SupabaseConfig): Repositories
     goBack: createSupabaseGoBackRepository(ctx),
     lenses,
     user: createSupabaseUserRepository(ctx, lenses),
+    rewards: createSupabaseRewardsRepository(ctx),
     auth: createSupabaseAuthRepository(ctx),
   }
 }
