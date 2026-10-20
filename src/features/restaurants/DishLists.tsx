@@ -50,7 +50,7 @@ function DishColumn({
                 <Link
                   to={`/share/dish/${dish.id}`}
                   aria-label={`Share ${dish.name}`}
-                  className="flex size-touch shrink-0 items-center justify-center rounded-pill hover:bg-surface"
+                  className="flex size-touch shrink-0 items-center justify-center rounded-control hover:bg-surface"
                 >
                   <Share2 aria-hidden className="size-4" />
                 </Link>

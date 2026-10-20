@@ -332,7 +332,7 @@ export function LogVisitForm({
         >
           {logVisit.isPending ? (
             <>
-              <Spinner label="Saving" className="text-white" /> Saving…
+              <Spinner label="Saving" className="text-on-primary" /> Saving…
             </>
           ) : (
             'Save visit'

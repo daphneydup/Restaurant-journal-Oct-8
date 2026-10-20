@@ -27,7 +27,7 @@ export function SegmentedControl<T extends string>({
   return (
     <fieldset>
       <legend className={cn('mb-2 text-sm font-medium', hideLegend && 'sr-only')}>{legend}</legend>
-      <div className="inline-flex w-full rounded-pill bg-surface-sunken p-1">
+      <div className="inline-flex w-full rounded-control bg-surface-sunken p-1">
         {options.map((option) => (
           <label key={option.value} className="flex-1">
             <input
@@ -40,8 +40,8 @@ export function SegmentedControl<T extends string>({
             />
             <span
               className={cn(
-                'flex min-h-touch cursor-pointer items-center justify-center rounded-pill px-3 text-sm font-semibold transition-colors',
-                'peer-checked:bg-primary peer-checked:text-white peer-checked:shadow-card',
+                'flex min-h-touch cursor-pointer items-center justify-center rounded-control px-3 text-sm font-semibold transition-colors',
+                'peer-checked:bg-primary peer-checked:text-on-primary peer-checked:shadow-card',
                 'peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus',
               )}
             >

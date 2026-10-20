@@ -40,7 +40,7 @@ export function RestaurantShareCard({
 
   return (
     <CardShell byline={`Recommended by ${sharedBy}`}>
-      <header className="bg-primary px-5 py-6 text-white">
+      <header className="bg-primary px-5 py-6 text-on-primary">
         <h2 className="text-3xl">{restaurant.name}</h2>
         <p className="mt-1">
           {restaurant.neighborhood} · <PriceTierBadge tier={restaurant.priceTier} />
@@ -119,7 +119,9 @@ export function DishShareCard({
 
   return (
     <CardShell byline={`${again ? 'Recommended' : 'Skipped'} by ${sharedBy}`}>
-      <header className={again ? 'bg-basil px-5 py-6 text-white' : 'bg-ink px-5 py-6 text-white'}>
+      <header
+        className={again ? 'bg-basil px-5 py-6 text-white' : 'bg-surface-sunken px-5 py-6 text-ink'}
+      >
         <p className="mb-1 flex items-center gap-2 text-sm font-semibold uppercase">
           <Icon aria-hidden className="size-4" /> {again ? 'Order again' : 'Skip this one'}
         </p>

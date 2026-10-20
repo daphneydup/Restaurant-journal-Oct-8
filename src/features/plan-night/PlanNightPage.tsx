@@ -47,7 +47,7 @@ function MatchCard({
       <div className="flex items-start gap-3">
         <span
           aria-hidden
-          className="flex size-9 shrink-0 items-center justify-center rounded-pill bg-primary font-semibold text-white"
+          className="flex size-9 shrink-0 items-center justify-center rounded-pill bg-primary font-semibold text-on-primary"
         >
           {rank}
         </span>

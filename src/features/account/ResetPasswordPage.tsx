@@ -72,7 +72,7 @@ export function ResetPasswordPage() {
           <Button type="submit" size="lg" disabled={updatePassword.isPending}>
             {updatePassword.isPending ? (
               <>
-                <Spinner label="Saving" className="text-white" /> Saving…
+                <Spinner label="Saving" className="text-on-primary" /> Saving…
               </>
             ) : (
               'Save new password'

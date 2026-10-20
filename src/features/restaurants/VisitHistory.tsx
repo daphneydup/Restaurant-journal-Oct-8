@@ -63,7 +63,10 @@ export function VisitHistory({
 
             <ul aria-label="Ratings" className="mt-2 flex flex-wrap gap-2 text-sm">
               {visit.ratings.map(({ lensId, rating }) => (
-                <li key={lensId} className="rounded-pill bg-surface-sunken px-2.5 py-1 font-medium">
+                <li
+                  key={lensId}
+                  className="rounded-control bg-surface-sunken px-2.5 py-1 font-medium"
+                >
                   {lenses.find((l) => l.id === lensId)?.shortLabel ?? lensId} {rating}/5
                 </li>
               ))}

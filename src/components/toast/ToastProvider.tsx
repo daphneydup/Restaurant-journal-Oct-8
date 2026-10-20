@@ -8,9 +8,9 @@ type Toast = { id: number; message: string; tone: ToastTone }
 const DISMISS_AFTER_MS = 6000
 const ICONS = { success: CircleCheck, error: CircleAlert, info: Info }
 const TONES: Record<ToastTone, string> = {
-  success: 'bg-basil-strong text-white',
-  error: 'bg-danger text-white',
-  info: 'bg-ink text-white',
+  success: 'bg-basil text-white',
+  error: 'bg-danger-solid text-white',
+  info: 'bg-surface-sunken text-ink ring-1 ring-primary/40',
 }
 
 /** Polite, non-blocking messages. Sits above the mobile tab bar. */

@@ -26,7 +26,7 @@ export function BottomTabBar() {
               {({ isActive }) => (
                 <>
                   {primary ? (
-                    <span className="flex size-14 items-center justify-center rounded-pill bg-primary text-white shadow-raised">
+                    <span className="flex size-14 items-center justify-center rounded-pill bg-primary text-on-primary shadow-raised">
                       <Icon aria-hidden className="size-7" />
                     </span>
                   ) : (

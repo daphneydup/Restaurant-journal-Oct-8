@@ -83,7 +83,7 @@ export function LoginPage() {
           <Button type="submit" size="lg" disabled={signIn.isPending}>
             {signIn.isPending ? (
               <>
-                <Spinner label="Logging in" className="text-white" /> Logging in…
+                <Spinner label="Logging in" className="text-on-primary" /> Logging in…
               </>
             ) : (
               'Log in'

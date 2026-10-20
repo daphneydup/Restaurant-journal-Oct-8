@@ -1,10 +1,12 @@
-@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/cormorant-garamond';
+@import '@fontsource-variable/cormorant-garamond/wght-italic.css';
 @import '@fontsource-variable/inter';
 @import 'tailwindcss';
 @import './tokens.css';
 
 @layer base {
   html {
+    color-scheme: dark; /* dark date pickers, scrollbars and form controls */
     -webkit-text-size-adjust: 100%;
     scroll-padding-bottom: 6rem;
   }
@@ -22,8 +24,13 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+  }
+
+  ::selection {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
   }
 
   /* Visible focus for every keyboard user, on every interactive element. */

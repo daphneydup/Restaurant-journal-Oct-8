@@ -77,7 +77,7 @@ export function ForgotPasswordPage() {
           <Button type="submit" size="lg" disabled={reset.isPending}>
             {reset.isPending ? (
               <>
-                <Spinner label="Sending" className="text-white" /> Sending…
+                <Spinner label="Sending" className="text-on-primary" /> Sending…
               </>
             ) : (
               'Send reset link'

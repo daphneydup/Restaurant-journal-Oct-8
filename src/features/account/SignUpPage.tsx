@@ -121,7 +121,7 @@ export function SignUpPage() {
           <Button type="submit" size="lg" disabled={signUp.isPending}>
             {signUp.isPending ? (
               <>
-                <Spinner label="Creating account" className="text-white" /> Creating account…
+                <Spinner label="Creating account" className="text-on-primary" /> Creating account…
               </>
             ) : (
               'Create account'
