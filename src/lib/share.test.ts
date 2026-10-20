@@ -111,16 +111,19 @@ describe('downloadBlob', () => {
     const revoke = vi.fn()
     URL.createObjectURL = create
     URL.revokeObjectURL = revoke
-    let clicked: HTMLAnchorElement | undefined
+    let seen: { download: string | null; href: string | null; attached: boolean } | undefined
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
       this: HTMLAnchorElement,
     ) {
-      clicked = this
+      seen = {
+        download: this.getAttribute('download'),
+        href: this.getAttribute('href'),
+        attached: document.body.contains(this),
+      }
     })
 
     downloadBlob(new Blob(['x']), 'card.png')
-    expect(clicked?.getAttribute('download')).toBe('card.png')
-    expect(clicked?.getAttribute('href')).toBe('blob:fake')
+    expect(seen).toEqual({ download: 'card.png', href: 'blob:fake', attached: true })
     expect(document.querySelector('a[download]')).toBeNull() // cleaned up
     expect(revoke).not.toHaveBeenCalled() // not yet: the download may start late
     vi.advanceTimersByTime(10_000)
