@@ -45,7 +45,7 @@ const save = (user: ReturnType<typeof userEvent.setup>) =>
 
 describe('Log a Visit page: loading the form', () => {
   it('shows a loading state, then the form with the profile’s diets preselected and today’s date', async () => {
-    await renderApp('/log', { repositories: createTestRepositories({ latencyMs: 150 }) })
+    await renderApp('/log', { repositories: createTestRepositories({ latencyMs: 500 }) })
     expect(screen.getByText('Loading the form')).toBeInTheDocument()
 
     await screen.findByRole('heading', { name: 'Where & when' })
@@ -107,7 +107,9 @@ describe('Log a Visit page: the 30-second path', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Noodle & Nori' }),
     ).toBeInTheDocument()
-    expect(await screen.findByText('Visit saved at Noodle & Nori')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Visit saved at Noodle & Nori. You earned 50 points.'),
+    ).toBeInTheDocument()
 
     const after = await repos.visits.listByRestaurant('r-noodle')
     expect(after).toHaveLength(before.length + 1)

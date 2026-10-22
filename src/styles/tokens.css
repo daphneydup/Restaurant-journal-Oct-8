@@ -1,43 +1,45 @@
 /*
- * Design tokens. Tailwind v4 reads these from CSS via @theme, so every token
- * below becomes a utility (bg-surface, text-ink-muted, rounded-card, font-display...).
- * All text/background pairings used by the UI meet WCAG AA (4.5:1 body, 3:1 large/UI).
+ * Design tokens: "luxury meets fine dining". A warm near-black canvas, ivory type, champagne-gold
+ * accents and hairline borders. Tailwind v4 reads these from CSS via @theme, so every token
+ * becomes a utility (bg-surface, text-ink-muted, rounded-card, font-display...).
+ * Every text/background pairing the UI uses is checked for WCAG AA by contrast.test.ts.
  */
 @theme {
-  /* Neutrals: warm cream surfaces, espresso ink */
-  --color-canvas: #fbf6ee;
-  --color-surface: #ffffff;
-  --color-surface-sunken: #f3eadb;
-  --color-ink: #2b1d14; /* 15:1 on canvas */
-  --color-ink-muted: #6b5645; /* 6.4:1 on canvas */
-  --color-line: #e3d6c3; /* decorative dividers only */
-  --color-line-strong: #8a7561; /* input borders, 4.2:1 on canvas (UI needs 3:1) */
+  /* Neutrals: warm black, ivory ink */
+  --color-canvas: #0f0d0b;
+  --color-surface: #1a1714;
+  --color-surface-sunken: #26211b;
+  --color-ink: #f5efe3; /* ivory */
+  --color-ink-muted: #bdb09b;
+  --color-line: #3b342b; /* decorative hairlines only */
+  --color-line-strong: #8c7d68; /* input borders: 3:1+ against canvas and surface */
 
-  /* Primary: terracotta */
-  --color-primary: #b4472a; /* white text 5.4:1 */
-  --color-primary-hover: #983a21;
-  --color-primary-soft: #f8e1d8;
-  --color-primary-strong: #7a2d17; /* text on primary-soft */
+  /* Primary: champagne gold */
+  --color-primary: #c9a45c;
+  --color-primary-hover: #dbb978;
+  --color-on-primary: #14110d; /* text on a gold fill */
+  --color-primary-soft: #2c2415; /* tinted background */
+  --color-primary-strong: #e6cc92; /* gold text on dark */
 
-  /* Secondary: basil */
-  --color-basil: #2f6b3f; /* white text 6.4:1 */
-  --color-basil-hover: #265733;
-  --color-basil-soft: #e1efdf;
-  --color-basil-strong: #1f4a2b;
+  /* Secondary: deep emerald (the "works for this diet" colour) */
+  --color-basil: #2f7a47; /* white text on it */
+  --color-basil-soft: #1a2a1f;
+  --color-basil-strong: #a9d9b4; /* text on basil-soft */
 
-  /* Accent: saffron */
-  --color-saffron: #e7a226; /* ink text on saffron 8:1 */
-  --color-saffron-soft: #fcefcf;
-  --color-saffron-strong: #7a4e00; /* text on saffron-soft */
+  /* Accent: saffron, for stars and highlights */
+  --color-saffron: #e0aa44;
+  --color-saffron-soft: #2f2615;
+  --color-saffron-strong: #f1d38f;
 
   /* Feedback */
-  --color-danger: #b3261e;
-  --color-danger-hover: #961e18;
-  --color-danger-soft: #fbe3e0;
-  --color-focus: #1d4ed8;
+  --color-danger: #ff8f82; /* error text and icons on dark */
+  --color-danger-solid: #b3261e; /* destructive button fill, white text on it */
+  --color-danger-solid-hover: #961e18;
+  --color-danger-soft: #3a1a17;
+  --color-focus: #7db1ff;
 
-  /* Type */
-  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  /* Type: Cormorant Garamond for display, Inter for everything you read */
+  --font-display: 'Cormorant Garamond Variable', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --text-xs: 0.8125rem;
@@ -46,26 +48,28 @@
   --text-sm--line-height: 1.375rem;
   --text-base: 1rem;
   --text-base--line-height: 1.5rem;
-  --text-lg: 1.1875rem;
+  --text-lg: 1.375rem;
   --text-lg--line-height: 1.75rem;
-  --text-xl: 1.4375rem;
-  --text-xl--line-height: 1.875rem;
-  --text-2xl: 1.8125rem;
-  --text-2xl--line-height: 2.25rem;
-  --text-3xl: 2.25rem;
-  --text-3xl--line-height: 2.625rem;
+  --text-xl: 1.75rem;
+  --text-xl--line-height: 2rem;
+  --text-2xl: 2.25rem;
+  --text-2xl--line-height: 2.5rem;
+  --text-3xl: 3rem;
+  --text-3xl--line-height: 3.25rem;
+  --text-4xl: 3.75rem;
+  --text-4xl--line-height: 3.875rem;
 
-  /* Radius */
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-card: 1rem;
-  --radius-sheet: 1.5rem;
+  /* Radius: crisp, not bubbly. Circles still use the pill radius. */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-control: 0.125rem;
+  --radius-card: 0.375rem;
+  --radius-sheet: 0.5rem;
   --radius-pill: 999px;
 
-  /* Elevation */
-  --shadow-card: 0 1px 2px rgb(43 29 20 / 0.06), 0 2px 8px rgb(43 29 20 / 0.06);
-  --shadow-raised: 0 4px 16px rgb(43 29 20 / 0.14);
+  /* Elevation: a gold hairline plus a deep, soft shadow */
+  --shadow-card: 0 0 0 1px rgb(201 164 92 / 0.14), 0 10px 28px rgb(0 0 0 / 0.38);
+  --shadow-raised: 0 0 0 1px rgb(201 164 92 / 0.3), 0 16px 40px rgb(0 0 0 / 0.55);
 
-  /* Spacing uses Tailwind's default 4px scale (p-1 = 4px ...). */
   --spacing-touch: 2.75rem; /* 44px minimum touch target: min-h-touch / min-w-touch */
 }

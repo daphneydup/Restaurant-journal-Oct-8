@@ -7,7 +7,16 @@ import { copyToClipboard } from '@/lib/clipboard'
  * Copy-link placeholder. The link points at this app's own share route, so it only opens on this
  * device until the back end exists; the panel says so honestly.
  */
-export function CopyLinkPanel({ path }: { path: string }) {
+export function CopyLinkPanel({
+  path,
+  label = 'Share link',
+  note = 'Preview only: links will open for friends once sharing is connected to the back end.',
+}: {
+  path: string
+  label?: string
+  /** Small print under the field. Pass null for none. */
+  note?: string | null
+}) {
   const inputId = useId()
   const { showToast } = useToast()
   const [copied, setCopied] = useState(false)
@@ -33,7 +42,7 @@ export function CopyLinkPanel({ path }: { path: string }) {
   return (
     <div className="flex flex-col gap-3 rounded-card bg-surface p-4 shadow-card">
       <label htmlFor={inputId} className="flex items-center gap-2 text-sm font-medium">
-        <Link2 aria-hidden className="size-4" /> Share link
+        <Link2 aria-hidden className="size-4" /> {label}
       </label>
       <div className="flex gap-2">
         <input
@@ -53,9 +62,7 @@ export function CopyLinkPanel({ path }: { path: string }) {
           )}
         </Button>
       </div>
-      <p className="text-sm text-ink-muted">
-        Preview only: links will open for friends once sharing is connected to the back end.
-      </p>
+      {note && <p className="text-sm text-ink-muted">{note}</p>}
     </div>
   )
 }

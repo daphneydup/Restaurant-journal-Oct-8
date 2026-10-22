@@ -3,9 +3,11 @@ import { createSupabaseAuthRepository } from './authRepository'
 import { createSupabaseClient, type SupabaseConfig } from './client'
 import { createSessionProvider, type SupabaseContext } from './context'
 import { createSupabaseDishRepository } from './dishRepository'
+import { createSupabaseGifRepository } from './gifRepository'
 import { createSupabaseGoBackRepository } from './goBackRepository'
 import { createLensCache } from './lensRepository'
 import { createSupabaseRestaurantRepository } from './restaurantRepository'
+import { createSupabaseRewardsRepository } from './rewardsRepository'
 import { createSupabaseUserRepository } from './userRepository'
 import { createSupabaseVisitRepository } from './visitRepository'
 
@@ -28,6 +30,8 @@ export function createSupabaseRepositories(config: SupabaseConfig): Repositories
     goBack: createSupabaseGoBackRepository(ctx),
     lenses,
     user: createSupabaseUserRepository(ctx, lenses),
+    rewards: createSupabaseRewardsRepository(ctx),
+    gifs: createSupabaseGifRepository(ctx),
     auth: createSupabaseAuthRepository(ctx),
   }
 }

@@ -126,7 +126,7 @@ describe('Share: copy link', () => {
 describe('Share: other states', () => {
   it('shows a loading state first', async () => {
     await renderApp('/share/restaurant/r-ember', {
-      repositories: createTestRepositories({ latencyMs: 150 }),
+      repositories: createTestRepositories({ latencyMs: 500 }),
     })
     expect(screen.getByText('Loading share card')).toBeInTheDocument()
     expect(

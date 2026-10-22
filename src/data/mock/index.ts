@@ -2,8 +2,10 @@ import type { Repositories } from '../repositories'
 import { createMockAuthRepository } from './authRepository'
 import { createMockDietLensRepository } from './lensRepository'
 import { createMockDishRepository } from './dishRepository'
+import { createMockGifRepository } from './gifRepository'
 import { createMockGoBackRepository } from './goBackRepository'
 import { createMockRestaurantRepository } from './restaurantRepository'
+import { createMockRewardsRepository } from './rewardsRepository'
 import { createMockStore, MOCK_STORAGE_KEY, type MockStoreOptions } from './store'
 import { createMockUserRepository } from './userRepository'
 import { createMockVisitRepository } from './visitRepository'
@@ -25,6 +27,11 @@ function browserStorage(): Storage | null {
 
 export function createMockRepositories(options: MockStoreOptions = {}): Repositories {
   const store = createMockStore(options)
+  const auth = createMockAuthRepository({
+    store,
+    storage: options.storage === undefined ? browserStorage() : options.storage,
+    storageKey: `${options.storageKey ?? MOCK_STORAGE_KEY}:auth`,
+  })
   return {
     kind: 'mock',
     restaurants: createMockRestaurantRepository(store),
@@ -33,11 +40,9 @@ export function createMockRepositories(options: MockStoreOptions = {}): Reposito
     goBack: createMockGoBackRepository(store),
     lenses: createMockDietLensRepository(store),
     user: createMockUserRepository(store),
-    auth: createMockAuthRepository({
-      store,
-      storage: options.storage === undefined ? browserStorage() : options.storage,
-      storageKey: `${options.storageKey ?? MOCK_STORAGE_KEY}:auth`,
-    }),
+    rewards: createMockRewardsRepository(store, auth),
+    gifs: createMockGifRepository(store),
+    auth,
     dev: {
       async resetDemoData() {
         // Not subject to simulated failures, so it can always be used to recover.

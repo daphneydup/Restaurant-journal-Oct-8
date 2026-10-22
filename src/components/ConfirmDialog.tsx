@@ -12,6 +12,7 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
   busy = false,
+  confirmVariant = 'danger',
 }: {
   open: boolean
   title: string
@@ -21,6 +22,8 @@ export function ConfirmDialog({
   onConfirm: () => void
   onCancel: () => void
   busy?: boolean
+  /** `danger` (default) for destructive actions; `primary` for ones that spend or confirm. */
+  confirmVariant?: 'danger' | 'primary'
 }) {
   return (
     <Dialog open={open} onClose={onCancel} title={title}>
@@ -30,7 +33,7 @@ export function ConfirmDialog({
           <Button variant="secondary" onClick={onCancel}>
             {cancelLabel}
           </Button>
-          <Button variant="danger" disabled={busy} onClick={onConfirm}>
+          <Button variant={confirmVariant} disabled={busy} onClick={onConfirm}>
             {confirmLabel}
           </Button>
         </div>

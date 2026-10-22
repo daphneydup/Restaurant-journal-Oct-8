@@ -1,14 +1,19 @@
 import { addDays, toISODate } from '@/lib/dates'
+import { VOUCHER_VALID_DAYS, visitPoints, voucherCodeFromId } from '@/lib/rewardRules'
+import { REWARD_CATALOG } from '@/lib/rewardsCatalog'
 import type {
   Dish,
   DishVerdict,
   GoBackEntry,
   PriceTier,
+  PointsEntry,
   Restaurant,
+  Reward,
   Visit,
+  Voucher,
   WorkedForEveryone,
 } from '@/types'
-import { MOCK_DB_VERSION, type MockDb } from '../db'
+import { MOCK_DB_VERSION, type MockDb, type MockRewards } from '../db'
 import { DEFAULT_LENSES } from './lenses'
 
 type Ratings = Record<string, 1 | 2 | 3 | 4 | 5>
@@ -92,7 +97,7 @@ export function buildDemoSeed(now: Date): MockDb {
     ...(note !== undefined && { note }),
   })
 
-  return {
+  const journal: Omit<MockDb, 'rewards'> = {
     version: MOCK_DB_VERSION,
     lenses: DEFAULT_LENSES,
     user: {
@@ -296,4 +301,70 @@ export function buildDemoSeed(now: Date): MockDb {
       goBack('g-5', 'r-copper', 200, 'Birthday dinner?'),
     ],
   }
+
+  return { ...journal, rewards: seedRewards(journal, ago, stamp) }
+}
+
+/**
+ * Points the demo person has already earned: one ledger line per seeded visit, one friend who
+ * joined with their invite, and two perks they redeemed (one already used, one still valid).
+ */
+function seedRewards(
+  journal: Omit<MockDb, 'rewards'>,
+  ago: (days: number) => Date,
+  stamp: (days: number) => string,
+): MockRewards {
+  const nameOf = new Map(journal.restaurants.map((r) => [r.id, r.name]))
+  const ledger: PointsEntry[] = journal.visits.map((visit) => ({
+    id: `p-${visit.id}`,
+    kind: 'visit',
+    points: visitPoints(visit),
+    label: `Visit to ${nameOf.get(visit.restaurantId) ?? 'a restaurant'}`,
+    restaurantId: visit.restaurantId,
+    createdAt: visit.createdAt,
+  }))
+  ledger.push({
+    id: 'p-invite-1',
+    kind: 'invite',
+    points: 200,
+    label: 'A friend joined with your invite',
+    restaurantId: null,
+    createdAt: stamp(30),
+  })
+
+  const redeemed = (id: string, reward: Reward, daysAgo: number, used: boolean): Voucher => {
+    ledger.push({
+      id: `p-${id}`,
+      kind: 'redeem',
+      points: -reward.cost,
+      label: `Redeemed: ${reward.title}`,
+      restaurantId: null,
+      createdAt: stamp(daysAgo),
+    })
+    return {
+      id,
+      rewardId: reward.id,
+      title: reward.title,
+      partner: reward.partner,
+      category: reward.category,
+      code: voucherCodeFromId(id),
+      pointsSpent: reward.cost,
+      status: used ? 'used' : 'active',
+      createdAt: stamp(daysAgo),
+      expiresAt: addDays(ago(daysAgo), VOUCHER_VALID_DAYS).toISOString(),
+      usedAt: used ? stamp(daysAgo - 3) : null,
+    }
+  }
+  const reward = (id: string): Reward => {
+    const found = REWARD_CATALOG.find((r) => r.id === id)
+    if (!found) throw new Error(`Seed refers to unknown reward ${id}`)
+    return found
+  }
+
+  const vouchers = [
+    redeemed('voucher-seed-drink', reward('drink-marigold'), 5, false),
+    redeemed('voucher-seed-dessert', reward('dessert-fig'), 20, true),
+  ]
+  ledger.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  return { ledger, vouchers, referralCode: null, claimedCode: null }
 }

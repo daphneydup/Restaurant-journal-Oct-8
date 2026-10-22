@@ -15,6 +15,7 @@ import { useDietLenses } from '@/hooks/queries'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useNow } from '@/hooks/useNow'
 import { GuestBanner } from '@/features/account/GuestBanner'
+import { PointsPill } from '@/features/rewards/PointsPill'
 import { FiltersSheet } from './FiltersSheet'
 import { SpotCard } from './SpotCard'
 import {
@@ -80,6 +81,7 @@ export function MySpotsPage() {
     body = (
       <EmptyState
         icon={UtensilsCrossed}
+        photo="diningRoomWood"
         title="No spots yet"
         description="Log your first visit and rate how it worked for each diet. It takes about 30 seconds."
         action={<ButtonLink to="/log">Log a visit</ButtonLink>}
@@ -120,7 +122,12 @@ export function MySpotsPage() {
       <PageHeader
         title="My Spots"
         description="Your trusted shortlist of places that work for everyone."
-        actions={<ButtonLink to="/log">Log a visit</ButtonLink>}
+        actions={
+          <>
+            <PointsPill />
+            <ButtonLink to="/log">Log a visit</ButtonLink>
+          </>
+        }
       />
 
       {spots && spots.length > 0 && <GuestBanner />}

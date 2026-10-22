@@ -26,6 +26,17 @@ export const queryKeys = {
     all: ['lenses'] as const,
     list: () => ['lenses', 'list'] as const,
   },
+  gifs: {
+    all: ['gifs'] as const,
+    search: (query: string) => ['gifs', 'search', query] as const,
+  },
+  rewards: {
+    all: ['rewards'] as const,
+    summary: () => ['rewards', 'summary'] as const,
+    catalog: () => ['rewards', 'catalog'] as const,
+    vouchers: () => ['rewards', 'vouchers'] as const,
+    referral: () => ['rewards', 'referral'] as const,
+  },
   account: {
     all: ['auth'] as const,
     current: () => ['auth', 'user'] as const,

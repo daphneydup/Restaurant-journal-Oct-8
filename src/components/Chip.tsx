@@ -18,7 +18,7 @@ export function Chip({
       type={type}
       aria-pressed={selected}
       className={cn(
-        'inline-flex min-h-touch items-center gap-1.5 rounded-pill border-2 px-4 text-sm font-medium transition-colors',
+        'inline-flex min-h-touch items-center gap-1.5 rounded-control border-2 px-4 text-sm font-medium transition-colors',
         selected
           ? 'border-basil bg-basil-soft text-basil-strong'
           : 'border-line-strong bg-surface text-ink hover:bg-surface-sunken',

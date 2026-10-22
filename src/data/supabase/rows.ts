@@ -43,6 +43,8 @@ const visitRow = z.object({
   note: nullable(z.string()),
   companions: z.array(z.string()),
   photo_urls: z.array(z.string()),
+  gif_url: nullable(z.string()),
+  gif_title: nullable(z.string()),
   created_at: z.string(),
   visit_ratings: z.array(z.object({ lens_id: z.string(), rating: z.number() })),
 })
@@ -114,6 +116,8 @@ export function toVisit(raw: unknown): Visit {
     createdAt: row.created_at,
     ...present('worthIt', row.worth_it),
     ...present('note', row.note),
+    ...present('gifUrl', row.gif_url),
+    ...present('gifTitle', row.gif_title),
   })
 }
 
@@ -185,6 +189,8 @@ export const visitColumns = (v: Omit<Visit, 'id' | 'createdAt' | 'ratings'>) => 
   note: v.note ?? null,
   companions: v.companions,
   photo_urls: v.photoUrls,
+  gif_url: v.gifUrl ?? null,
+  gif_title: v.gifTitle ?? null,
 })
 
 export const ratingRows = (visitId: string, ratings: Visit['ratings']) =>

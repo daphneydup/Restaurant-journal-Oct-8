@@ -40,7 +40,7 @@ export function SpotCard({
           </p>
         </div>
         {goBack && (
-          <span className="flex shrink-0 items-center gap-1 rounded-pill bg-primary-soft px-2.5 py-1 text-xs font-semibold text-primary-strong">
+          <span className="flex shrink-0 items-center gap-1 rounded-control bg-primary-soft px-2.5 py-1 text-xs font-semibold text-primary-strong">
             <Bookmark aria-hidden className="size-3.5" /> Go back
           </span>
         )}

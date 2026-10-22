@@ -48,7 +48,7 @@ export function Dialog({
         if (event.target === event.currentTarget) onClose()
       }}
       className={cn(
-        'w-full max-w-lg rounded-sheet bg-surface p-0 text-ink shadow-raised backdrop:bg-ink/50',
+        'w-full max-w-lg rounded-sheet bg-surface p-0 text-ink shadow-raised backdrop:bg-black/70',
         variant === 'sheet'
           ? 'm-0 mt-auto max-h-[90dvh] max-w-none rounded-b-none md:m-auto md:max-w-lg md:rounded-b-sheet'
           : 'm-auto',

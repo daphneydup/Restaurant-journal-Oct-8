@@ -25,7 +25,7 @@ const section = (title: string | RegExp) =>
 
 describe('Restaurant detail: overview', () => {
   it('shows a loading state, then the restaurant', async () => {
-    await renderApp('/spots/r-ember', { repositories: createTestRepositories({ latencyMs: 150 }) })
+    await renderApp('/spots/r-ember', { repositories: createTestRepositories({ latencyMs: 500 }) })
     expect(screen.getByText('Loading restaurant')).toBeInTheDocument()
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Ember & Orchard' }),

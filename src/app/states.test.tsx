@@ -16,13 +16,15 @@ const DATA_SCREENS = [
   { name: 'Plan a Night Out', path: '/plan' },
   { name: 'Share (restaurant)', path: '/share/restaurant/r-ember' },
   { name: 'Share (dish)', path: '/share/dish/d-1' },
+  { name: 'Rewards', path: '/rewards' },
+  { name: 'Invite friends', path: '/invite' },
   { name: 'Profile', path: '/profile' },
   { name: 'Account', path: '/account' },
 ]
 
 describe.each(DATA_SCREENS)('$name', ({ path }) => {
   it('shows a loading state while data is on its way', async () => {
-    await renderApp(path, { repositories: createTestRepositories({ latencyMs: 150 }) })
+    await renderApp(path, { repositories: createTestRepositories({ latencyMs: 500 }) })
     // Every loading label starts with "Loading", e.g. "Loading your spots".
     expect(screen.getByText(/^Loading/)).toBeInTheDocument()
   })

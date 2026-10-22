@@ -19,6 +19,8 @@ const logVisitResult = z.object({
   restaurant_id: z.string(),
   visit_id: z.string(),
   created_restaurant: z.boolean(),
+  // Absent from databases that haven't run the rewards migration yet.
+  points_earned: z.number().int().default(0),
 })
 
 export function createSupabaseVisitRepository(
@@ -132,6 +134,7 @@ export function createSupabaseVisitRepository(
         visit,
         dishes: toList(dishRows, toDish),
         createdRestaurant: result.created_restaurant,
+        pointsEarned: result.points_earned,
       }
     },
   }

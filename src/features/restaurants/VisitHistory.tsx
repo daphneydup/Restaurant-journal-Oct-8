@@ -63,7 +63,10 @@ export function VisitHistory({
 
             <ul aria-label="Ratings" className="mt-2 flex flex-wrap gap-2 text-sm">
               {visit.ratings.map(({ lensId, rating }) => (
-                <li key={lensId} className="rounded-pill bg-surface-sunken px-2.5 py-1 font-medium">
+                <li
+                  key={lensId}
+                  className="rounded-control bg-surface-sunken px-2.5 py-1 font-medium"
+                >
                   {lenses.find((l) => l.id === lensId)?.shortLabel ?? lensId} {rating}/5
                 </li>
               ))}
@@ -74,6 +77,14 @@ export function VisitHistory({
             )}
             {visit.note && (
               <p className="mt-2 border-l-4 border-saffron pl-3 italic">{visit.note}</p>
+            )}
+            {visit.gifUrl && (
+              <img
+                src={visit.gifUrl}
+                alt={visit.gifTitle ?? 'Reaction GIF'}
+                loading="lazy"
+                className="mt-3 max-h-48 max-w-full rounded-md border border-line"
+              />
             )}
           </li>
         ))}

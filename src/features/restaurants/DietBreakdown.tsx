@@ -40,9 +40,9 @@ export function DietBreakdown({
                 {stat.count} {stat.count === 1 ? 'visit' : 'visits'}
               </span>
             </div>
-            <div aria-hidden className="h-2.5 overflow-hidden rounded-pill bg-surface-sunken">
+            <div aria-hidden className="h-2.5 overflow-hidden rounded-control bg-surface-sunken">
               <div
-                className={cn('h-full rounded-pill', meetsFit(stat) ? 'bg-basil' : 'bg-saffron')}
+                className={cn('h-full rounded-control', meetsFit(stat) ? 'bg-basil' : 'bg-saffron')}
                 style={{ width: `${(stat.average / 5) * 100}%` }}
               />
             </div>

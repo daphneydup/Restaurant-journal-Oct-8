@@ -13,7 +13,7 @@ export function DietFitBadge({ lens, average }: { lens: DietLens; average: numbe
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-pill px-2.5 py-1 text-xs font-semibold',
+        'inline-flex items-center gap-1 rounded-control px-2.5 py-1 text-xs font-semibold',
         works ? 'bg-basil-soft text-basil-strong' : 'bg-surface-sunken text-ink',
       )}
     >

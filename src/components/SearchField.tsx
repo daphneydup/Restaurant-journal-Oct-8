@@ -30,14 +30,14 @@ export function SearchField({
         placeholder={placeholder}
         autoComplete="off"
         onChange={(event) => onChange(event.target.value)}
-        className="min-h-touch w-full rounded-pill border-2 border-line-strong bg-surface pr-12 pl-10 text-base [&::-webkit-search-cancel-button]:hidden"
+        className="min-h-touch w-full rounded-control border-2 border-line-strong bg-surface pr-12 pl-10 text-base [&::-webkit-search-cancel-button]:hidden"
       />
       {value && (
         <button
           type="button"
           aria-label="Clear search"
           onClick={() => onChange('')}
-          className="absolute top-1/2 right-1 flex size-touch -translate-y-1/2 items-center justify-center rounded-pill hover:bg-surface-sunken"
+          className="absolute top-1/2 right-1 flex size-touch -translate-y-1/2 items-center justify-center rounded-control hover:bg-surface-sunken"
         >
           <X aria-hidden className="size-4" />
         </button>

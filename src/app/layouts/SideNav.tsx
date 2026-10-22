@@ -23,9 +23,9 @@ export function SideNav() {
                 end={end}
                 className={({ isActive }) =>
                   cn(
-                    'flex min-h-touch items-center gap-3 rounded-pill px-4 font-medium transition-colors',
+                    'flex min-h-touch items-center gap-3 rounded-control px-4 font-medium transition-colors',
                     primary
-                      ? 'bg-primary text-white hover:bg-primary-hover'
+                      ? 'bg-primary text-on-primary hover:bg-primary-hover'
                       : isActive
                         ? 'bg-primary-soft text-primary-strong'
                         : 'text-ink hover:bg-surface-sunken',
@@ -43,7 +43,7 @@ export function SideNav() {
             to={member ? '/account' : '/login'}
             className={({ isActive }) =>
               cn(
-                'flex min-h-touch items-center gap-3 rounded-pill px-4 font-medium transition-colors',
+                'flex min-h-touch items-center gap-3 rounded-control px-4 font-medium transition-colors',
                 isActive
                   ? 'bg-primary-soft text-primary-strong'
                   : 'text-ink hover:bg-surface-sunken',

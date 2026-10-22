@@ -21,10 +21,12 @@ describe('Guest banner on My Spots', () => {
     await renderApp('/', { repositories: repos })
     const banner = await screen.findByRole('complementary', { name: 'Save your journal' })
     expect(banner).toHaveTextContent('saved only in this browser')
-    expect(within(banner).getByRole('link', { name: 'Create an account' })).toHaveAttribute(
-      'href',
-      '/signup',
-    )
+    // "Account" is what you see; screen readers hear what it does.
+    const signUp = within(banner).getByRole('link', { name: 'Create an account' })
+    expect(signUp).toHaveTextContent('Account')
+    expect(signUp).toHaveAttribute('href', '/signup')
+    expect(within(banner).getByRole('link', { name: 'Login' })).toHaveAttribute('href', '/login')
+    expect(within(banner).getByRole('button', { name: 'Dismiss' })).toBeInTheDocument()
   })
 
   it('goes away when dismissed, and stays away on the next visit', async () => {

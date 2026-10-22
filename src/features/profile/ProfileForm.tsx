@@ -88,7 +88,7 @@ export function ProfileForm({ profile, lenses }: { profile: User; lenses: readon
         <Button type="submit" size="lg" disabled={update.isPending || !isDirty}>
           {update.isPending ? (
             <>
-              <Spinner label="Saving" className="text-white" /> Saving…
+              <Spinner label="Saving" className="text-on-primary" /> Saving…
             </>
           ) : (
             'Save profile'

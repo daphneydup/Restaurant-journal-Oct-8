@@ -57,7 +57,7 @@ export function CompanionsInput({
           {names.map((name) => (
             <li
               key={name}
-              className="flex items-center gap-1 rounded-pill bg-saffron-soft py-0.5 pr-0.5 pl-3 text-sm font-medium text-saffron-strong"
+              className="flex items-center gap-1 rounded-control bg-saffron-soft py-0.5 pr-0.5 pl-3 text-sm font-medium text-saffron-strong"
             >
               {name}
               <IconButton
