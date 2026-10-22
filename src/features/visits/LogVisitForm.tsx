@@ -35,6 +35,7 @@ import {
   type ValidLogVisitValues,
 } from './logVisitSchema'
 import { PartyAndRatings } from './PartyAndRatings'
+import { GifField } from '@/features/gifs/GifField'
 import { PhotoPicker } from './PhotoPicker'
 import { RestaurantPicker, type RestaurantChoice } from './RestaurantPicker'
 import { suggestWorkedForEveryone } from './suggestWorkedForEveryone'
@@ -198,7 +199,7 @@ export function LogVisitForm({
   }
 
   function onInvalid(failed: typeof errors) {
-    if (failed.note || failed.photoUrls) setMoreOpen(true)
+    if (failed.note || failed.photoUrls || failed.gifUrl) setMoreOpen(true)
   }
 
   return (
@@ -279,7 +280,7 @@ export function LogVisitForm({
 
       <Disclosure
         label="More details"
-        description="Price, dishes, photos, notes"
+        description="Price, dishes, photos, a GIF, notes"
         open={moreOpen}
         onOpenChange={setMoreOpen}
       >
@@ -304,6 +305,16 @@ export function LogVisitForm({
             error={messageAt(errors, ['photoUrls'])}
           />
         </div>
+        <GifField
+          value={
+            values.gifUrl ? { url: values.gifUrl, title: values.gifTitle ?? 'GIF' } : undefined
+          }
+          onChange={(gif) => {
+            set('gifUrl', gif?.url)
+            set('gifTitle', gif?.title)
+          }}
+          error={messageAt(errors, ['gifUrl'])}
+        />
         <TextArea
           id={FIELD_IDS.note}
           label="Note (optional)"

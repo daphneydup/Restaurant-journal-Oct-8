@@ -2,6 +2,7 @@ import type { Repositories } from '../repositories'
 import { createMockAuthRepository } from './authRepository'
 import { createMockDietLensRepository } from './lensRepository'
 import { createMockDishRepository } from './dishRepository'
+import { createMockGifRepository } from './gifRepository'
 import { createMockGoBackRepository } from './goBackRepository'
 import { createMockRestaurantRepository } from './restaurantRepository'
 import { createMockRewardsRepository } from './rewardsRepository'
@@ -40,6 +41,7 @@ export function createMockRepositories(options: MockStoreOptions = {}): Reposito
     lenses: createMockDietLensRepository(store),
     user: createMockUserRepository(store),
     rewards: createMockRewardsRepository(store, auth),
+    gifs: createMockGifRepository(store),
     auth,
     dev: {
       async resetDemoData() {

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { idSchema, isoDateSchema, isoDateTimeSchema, text } from './common'
 import { dietRatingSchema } from './dietRating'
+import { gifUrlSchema } from './gif'
 import { priceTierSchema } from './priceTier'
 
 export const WORKED_FOR_EVERYONE = ['yes', 'maybe', 'no'] as const
@@ -23,6 +24,9 @@ const visitDetailFields = {
   companions: z.array(text(40)).max(12),
   /** Photo URLs (data URLs in the mock layer, storage URLs with Supabase). */
   photoUrls: z.array(z.string().min(1)).max(4),
+  /** A reaction GIF chosen from GIPHY, with its title (for the alt text). */
+  gifUrl: gifUrlSchema.optional(),
+  gifTitle: z.string().trim().min(1).max(200).optional(),
 }
 
 const visitFields = { restaurantId: idSchema, ...visitDetailFields }

@@ -1,6 +1,7 @@
 export * from './auth'
 export * from './dev'
 export * from './dishes'
+export * from './gifs'
 export * from './goBack'
 export * from './lenses'
 export * from './profile'

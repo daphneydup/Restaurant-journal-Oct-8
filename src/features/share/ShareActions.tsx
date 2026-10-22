@@ -1,6 +1,7 @@
 import { Download, Mail, MessageCircle, Share2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Button, Spinner, useToast } from '@/components'
+import { GifField, type ChosenGif } from '@/features/gifs/GifField'
 import { useReferral } from '@/hooks/queries'
 import { referralLink } from '@/lib/pendingReferral'
 import {
@@ -45,11 +46,19 @@ export function ShareActions({
   const referral = useReferral()
   const [result, setResult] = useState<{ key: string; state: ImageState } | null>(null)
   const [sharing, setSharing] = useState(false)
+  const [gif, setGif] = useState<ChosenGif | undefined>()
 
   const url = referral.data ? referralLink(referral.data.code) : `${window.location.origin}/`
+  // A GIF travels as a link in the caption: the network shows the animation itself, which a
+  // still picture could not. (A bare "giphy.com" home link would say nothing, so it is skipped.)
+  const gifLink = gif?.pageUrl && new URL(gif.pageUrl).pathname.length > 1 ? gif.pageUrl : undefined
   const payload = useMemo(
-    () => ({ title: content.title, text: content.text, url }),
-    [content.title, content.text, url],
+    () => ({
+      title: content.title,
+      text: gifLink ? `${content.text} ${gifLink}` : content.text,
+      url,
+    }),
+    [content.title, content.text, gifLink, url],
   )
   const links = useMemo(() => shareLinks(payload), [payload])
   const fileName = content.fileName ?? shareFileName(content.title)
@@ -139,6 +148,8 @@ export function ShareActions({
           We couldn’t make the picture on this device, but you can still share the link.
         </p>
       )}
+
+      <GifField label="Add a GIF to your post (optional)" value={gif} onChange={setGif} />
 
       <div className="flex flex-wrap gap-2">
         {canNativeShare() && (

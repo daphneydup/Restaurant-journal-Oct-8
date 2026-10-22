@@ -4,6 +4,7 @@ import {
   dishVerdictSchema,
   priceTierSchema,
   RATING_VALUES,
+  gifUrlSchema,
   text,
   WORKED_FOR_EVERYONE,
   type LogVisitInput,
@@ -70,6 +71,9 @@ export function createLogVisitFormSchema(today: string) {
       .max(MAX_DISHES),
     photoUrls: z.array(z.string().min(1)).max(MAX_PHOTOS, `Up to ${MAX_PHOTOS} photos`),
     note: z.string().trim().max(MAX_NOTE_LENGTH, `Keep it under ${MAX_NOTE_LENGTH} characters`),
+    /** A reaction GIF: both are set together, or neither. */
+    gifUrl: gifUrlSchema.optional(),
+    gifTitle: z.string().trim().min(1).max(200).optional(),
     addToGoBack: z.boolean(),
   })
 }
@@ -138,6 +142,7 @@ export function toLogVisitInput(
       photoUrls: values.photoUrls,
       ...(values.worthIt !== undefined && { worthIt: values.worthIt === 'yes' }),
       ...(note !== '' && { note }),
+      ...(values.gifUrl && { gifUrl: values.gifUrl, gifTitle: values.gifTitle ?? 'GIF' }),
     },
     dishes: values.dishes.map(({ name, verdict, lensIds }) => ({ name, verdict, lensIds })),
     addToGoBack: values.addToGoBack,

@@ -78,6 +78,14 @@ export function VisitHistory({
             {visit.note && (
               <p className="mt-2 border-l-4 border-saffron pl-3 italic">{visit.note}</p>
             )}
+            {visit.gifUrl && (
+              <img
+                src={visit.gifUrl}
+                alt={visit.gifTitle ?? 'Reaction GIF'}
+                loading="lazy"
+                className="mt-3 max-h-48 max-w-full rounded-md border border-line"
+              />
+            )}
           </li>
         ))}
       </ul>

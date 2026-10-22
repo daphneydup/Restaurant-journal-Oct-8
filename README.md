@@ -127,6 +127,25 @@ so on on a phone, and carries the image), **Save image**, and web links for X, F
 and email. There is no direct "post to Instagram" API for a web page, so nothing asks for social
 logins. Captions include your invite link. The invite screen shares the same way, words only.
 
+## GIFs
+
+A visit can carry one reaction GIF (Log a Visit → More details), and a share post can include one
+(it travels as a GIPHY link in the caption, so the network shows the animation).
+
+- **The GIPHY key never reaches the browser.** The app calls the `giphy` Edge Function
+  ([`supabase/functions/giphy`](supabase/functions/giphy)), which adds the key from the Supabase
+  secret `GIPHY_API_KEY` and returns trimmed results. Deploy it with
+  `supabase functions deploy giphy` and set the secret with
+  `supabase secrets set GIPHY_API_KEY=<your key>` (or Dashboard → Edge Functions → Secrets).
+- Run [`supabase/migrations/20261021000000_visit_gifs.sql`](supabase/migrations/20261021000000_visit_gifs.sql)
+  (after the rewards one) to add the visit columns. The database only accepts https GIPHY
+  addresses, and so does the app.
+- **Demo mode** (no Supabase) offers a dozen drawn stand-in pictures instead, so the flow can be
+  tried offline.
+- GIPHY's terms ask for their "Powered by GIPHY" attribution; the picker credits them with a
+  text link. Swap in their official badge image before launch if you want to follow the brand
+  guidelines to the letter.
+
 ## Testimonials and photography
 
 - The carousel quotes in [`src/features/testimonials/testimonials.ts`](src/features/testimonials/testimonials.ts)
