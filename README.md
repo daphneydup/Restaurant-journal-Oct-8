@@ -5,7 +5,11 @@ steak lovers). Log a visit in about 30 seconds, rate how well it worked for each
 reuse a trusted shortlist when planning the next night out.
 
 **Screens:** My Spots (search and filters) · Log a Visit · Restaurant Detail · Go Back list ·
-Plan a Night Out · Share card · Profile · Log in / Sign up / Forgot password · Account.
+Plan a Night Out · Share card · Rewards · Invite friends · Profile · Log in / Sign up / Forgot
+password · Account.
+
+The look is dark and refined ("luxury meets fine dining"): a warm near-black canvas, ivory type,
+champagne-gold accents, Cormorant Garamond headings and stock photography.
 
 The app runs in one of two modes, chosen by environment variables:
 
@@ -31,6 +35,9 @@ npm run dev      # http://localhost:5173, runs on demo data
       tables, security rules, the `log_visit` function and the six dietary lenses.
    2. [`supabase/migrations/20261009000000_account_deletion.sql`](supabase/migrations/20261009000000_account_deletion.sql):
       the `delete_my_account` function behind **Delete account**.
+   3. [`supabase/migrations/20261020000000_rewards.sql`](supabase/migrations/20261020000000_rewards.sql):
+      points, perks, vouchers and invites (see [Rewards and invites](#rewards-and-invites)). Until
+      it is run, logging visits still works but the Rewards screens show their error state.
 2. **Allow anonymous sign-ins.** Dashboard → **Authentication → Providers → Anonymous Sign-Ins** → on.
    Visitors start as a _guest_ with no login screen, and every row is owned by that identity.
    Row-level security means nobody can see anyone else's data.
@@ -86,6 +93,48 @@ Things worth knowing:
 - **Demo mode has accounts too**, so every screen can be tried without a server. They live in this
   browser, store only a salted hash, share one journal, and protect nothing. Use Supabase for real
   security.
+
+## Rewards and invites
+
+People earn **points** and spend them on **perks** (free appetizers, drinks, desserts, entrées,
+discounts), which become **vouchers** with a code.
+
+| How you earn    | Points                                                                      |
+| --------------- | --------------------------------------------------------------------------- |
+| Log a visit     | 50, plus 10 for a note and 10 for a photo                                   |
+| Invite a friend | 200 for each of you when they join with your link (`/join?ref=CODE`)        |
+| Limits          | 3 paid visits a day, only the first per restaurant per day; 25 paid invites |
+
+- The rules live in [`src/lib/rewardRules.ts`](src/lib/rewardRules.ts) and are repeated in the SQL
+  migration, so change both together. Points are a **ledger** (the balance is its sum), never a
+  stored total.
+- **With Supabase the database enforces everything**: the ledger and vouchers have no write
+  policies, so the browser can't grant itself points. Visits pay through a trigger; redeeming and
+  claiming an invite are atomic SQL functions. Claiming needs a signed-in member with a confirmed
+  email, works once per person, and never for your own code.
+- **The perk catalogue is a sample**: the partners are fictional and nothing is honoured by a real
+  restaurant yet. The Rewards screen says so.
+- **Demo mode can't verify invites** (nobody to check a code against), so any well-formed code that
+  isn't yours pays the joiner; the Supabase version verifies the code and pays both sides.
+- Opening an invite link stores the code; it is claimed automatically once the person has an
+  account, so sign-up needs no extra step.
+
+## Social sharing
+
+The Share screen's **Post it** panel makes a 1080 x 1350 card image (drawn on a canvas with the
+app's own colours), then offers the native share sheet (which lists Instagram, TikTok, Messages and
+so on on a phone, and carries the image), **Save image**, and web links for X, Facebook, WhatsApp
+and email. There is no direct "post to Instagram" API for a web page, so nothing asks for social
+logins. Captions include your invite link. The invite screen shares the same way, words only.
+
+## Testimonials and photography
+
+- The carousel quotes in [`src/features/testimonials/testimonials.ts`](src/features/testimonials/testimonials.ts)
+  are **sample placeholders**, labelled "Sample quotes" on screen. Replace them (and drop the
+  label) once real members agree to be quoted.
+- Photos in `public/images` come from Unsplash (free licence) and are credited on the Rewards page;
+  the registry is [`src/lib/photos.ts`](src/lib/photos.ts). They set a mood and never claim to show
+  a specific (fictional) restaurant.
 
 ## Scripts
 
@@ -174,10 +223,11 @@ requires every data screen to have loading and error-with-retry states.
 
 ## Testing
 
-`npm test` runs ~700 tests: schemas, the mock repositories, the Supabase repositories (the real
+`npm test` runs ~890 tests: schemas, the mock repositories, the Supabase repositories (the real
 `supabase-js` client against a recording fake HTTP server, so request shapes and error mapping are
 checked), the matching logic, every screen's loading / empty / error / success states, and the
-Log a Visit form's validation.
+Log a Visit form's validation, the rewards rules, the carousel, share-image layout and whole
+account journeys. On a busy machine run `npx vitest run --maxWorkers=2`: a few screens are timed.
 
 ## Moving to a different back end
 
