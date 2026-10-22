@@ -93,8 +93,11 @@ create policy "read own vouchers" on public.vouchers      for select to authenti
 create policy "read the catalogue" on public.rewards_catalog for select to authenticated using (active);
 -- referral_codes and referral_claims have no policies: they are only reached through functions.
 
-revoke insert, update, delete on public.points_ledger, public.vouchers, public.rewards_catalog,
+-- Supabase grants every privilege on new tables to anon and authenticated, and TRUNCATE ignores
+-- row-level security, so take everything back and give back only what is needed.
+revoke all on public.points_ledger, public.vouchers, public.rewards_catalog,
   public.referral_codes, public.referral_claims from anon, authenticated;
+grant select on public.points_ledger, public.vouchers, public.rewards_catalog to authenticated;
 
 -- ---------------------------------------------------------------------------
 -- Paying for a visit: a trigger, so every way of saving a visit (log_visit, a direct insert)
