@@ -81,6 +81,7 @@ export function MySpotsPage() {
     body = (
       <EmptyState
         icon={UtensilsCrossed}
+        photo="diningRoomWood"
         title="No spots yet"
         description="Log your first visit and rate how it worked for each diet. It takes about 30 seconds."
         action={<ButtonLink to="/log">Log a visit</ButtonLink>}

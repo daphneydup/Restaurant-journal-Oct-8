@@ -18,7 +18,7 @@ const section = (title: string) =>
 
 describe('Account: READ', () => {
   it('shows a loading state, then the guest status with the way to create an account', async () => {
-    await renderApp('/account', { repositories: createTestRepositories({ latencyMs: 150 }) })
+    await renderApp('/account', { repositories: createTestRepositories({ latencyMs: 500 }) })
     expect(screen.getByText('Loading your account')).toBeInTheDocument()
 
     const status = await screen.findByRole('heading', { level: 2, name: 'Your account' })

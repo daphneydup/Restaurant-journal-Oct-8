@@ -45,7 +45,7 @@ const save = (user: ReturnType<typeof userEvent.setup>) =>
 
 describe('Log a Visit page: loading the form', () => {
   it('shows a loading state, then the form with the profile’s diets preselected and today’s date', async () => {
-    await renderApp('/log', { repositories: createTestRepositories({ latencyMs: 150 }) })
+    await renderApp('/log', { repositories: createTestRepositories({ latencyMs: 500 }) })
     expect(screen.getByText('Loading the form')).toBeInTheDocument()
 
     await screen.findByRole('heading', { name: 'Where & when' })

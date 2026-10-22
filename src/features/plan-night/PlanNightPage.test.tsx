@@ -33,7 +33,7 @@ const rankedNames = () => {
 
 describe('Plan a Night Out', () => {
   it('shows a loading state, then starts from the profile’s diets (vegan + steak)', async () => {
-    await renderApp('/plan', { repositories: createTestRepositories({ latencyMs: 150 }) })
+    await renderApp('/plan', { repositories: createTestRepositories({ latencyMs: 500 }) })
     expect(screen.getByText('Loading your spots')).toBeInTheDocument()
 
     await screen.findByRole('heading', { level: 2, name: 'Your shortlist' })

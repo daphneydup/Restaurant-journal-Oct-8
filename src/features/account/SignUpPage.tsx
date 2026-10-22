@@ -7,6 +7,7 @@ import {
   Button,
   ButtonLink,
   PageHeader,
+  Photo,
   PasswordField,
   Spinner,
   TextField,
@@ -91,6 +92,11 @@ export function SignUpPage() {
       <PageHeader
         title="Create account"
         description="Keep your journal safe and use it on any device."
+      />
+      <Photo
+        name="eveningTables"
+        position="center 40%"
+        className="mx-auto mb-4 h-32 max-w-md rounded-card"
       />
       <AuthCard>
         <Notice>Everything you’ve logged so far comes with you.</Notice>

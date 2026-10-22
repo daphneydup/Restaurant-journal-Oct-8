@@ -20,7 +20,7 @@ const names = () =>
 
 describe('Go-Back list', () => {
   it('shows a loading state, then the spots you want to revisit, longest wait first', async () => {
-    await renderApp('/go-back', { repositories: createTestRepositories({ latencyMs: 150 }) })
+    await renderApp('/go-back', { repositories: createTestRepositories({ latencyMs: 500 }) })
     expect(screen.getByText('Loading your Go-Back list')).toBeInTheDocument()
 
     await screen.findByRole('heading', { level: 2, name: 'The Copper Table' })

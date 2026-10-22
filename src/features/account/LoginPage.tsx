@@ -6,6 +6,7 @@ import {
   Button,
   ButtonLink,
   PageHeader,
+  Photo,
   PasswordField,
   Spinner,
   TextField,
@@ -58,6 +59,11 @@ export function LoginPage() {
   return (
     <>
       <PageHeader title="Log in" description="Pick up your journal on any device." />
+      <Photo
+        name="eveningTables"
+        position="center 40%"
+        className="mx-auto mb-4 h-32 max-w-md rounded-card"
+      />
       <AuthCard>
         <form
           noValidate

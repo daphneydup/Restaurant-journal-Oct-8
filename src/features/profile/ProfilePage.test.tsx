@@ -23,7 +23,7 @@ async function openProfile() {
 
 describe('Profile', () => {
   it('shows a loading state, then the saved profile', async () => {
-    await renderApp('/profile', { repositories: createTestRepositories({ latencyMs: 150 }) })
+    await renderApp('/profile', { repositories: createTestRepositories({ latencyMs: 500 }) })
     expect(screen.getByText('Loading your profile')).toBeInTheDocument()
 
     expect(await screen.findByRole('textbox', { name: 'Display name' })).toHaveValue('Summer')

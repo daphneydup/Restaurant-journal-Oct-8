@@ -6,6 +6,7 @@ import {
   ErrorState,
   LoadingRegion,
   PageHeader,
+  Photo,
   Skeleton,
   useToast,
 } from '@/components'
@@ -86,6 +87,7 @@ export function InvitePage() {
     const { code, invitedCount, pointsEarned } = referral.data
     body = (
       <div className="flex flex-col gap-6">
+        <Photo name="tableWine" position="center 55%" className="h-40 rounded-card md:h-52" />
         <CodeCard code={code} />
         <CopyLinkPanel
           path={`/join?ref=${encodeURIComponent(code)}`}

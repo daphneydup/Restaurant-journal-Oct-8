@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useSearchParams } from 'react-router'
-import { ButtonLink, Card, PageHeader } from '@/components'
+import { ButtonLink, Card, PageHeader, Photo } from '@/components'
 import { TestimonialCarousel } from '@/features/testimonials/TestimonialCarousel'
 import { useAccount } from '@/hooks/queries'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
@@ -46,6 +46,12 @@ export function JoinPage() {
       <PageHeader
         title="A friend saved you a seat"
         description={`Join with their invite and start with ${formatPoints(POINTS.referral)} bonus points.`}
+      />
+      <Photo
+        name="chefPlating"
+        priority
+        position="center 60%"
+        className="mb-5 h-52 rounded-card md:h-64"
       />
       <Card className="flex flex-col items-start gap-4">
         <p className="text-ink-muted">

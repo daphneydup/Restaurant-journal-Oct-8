@@ -8,6 +8,7 @@ import {
   ErrorState,
   LoadingRegion,
   PageHeader,
+  PhotoCredits,
   Skeleton,
   useToast,
 } from '@/components'
@@ -127,6 +128,10 @@ export function RewardsPage() {
         <HowYouEarn />
 
         <TestimonialCarousel />
+
+        <PhotoCredits
+          names={['loungeLamps', 'chefPlating', 'tableWine', 'eveningTables', 'diningRoomWood']}
+        />
 
         <Disclosure
           label="Points history"

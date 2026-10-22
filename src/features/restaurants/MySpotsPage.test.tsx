@@ -29,7 +29,7 @@ async function openSpots(path = '/') {
 
 describe('My Spots: list', () => {
   it('shows a loading state, then every spot, most recently visited first', async () => {
-    await renderApp('/', { repositories: createTestRepositories({ latencyMs: 150 }) })
+    await renderApp('/', { repositories: createTestRepositories({ latencyMs: 500 }) })
     expect(screen.getByText('Loading your spots')).toBeInTheDocument()
 
     await screen.findByRole('heading', { name: 'Ember & Orchard' })
